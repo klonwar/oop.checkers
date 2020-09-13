@@ -1,5 +1,7 @@
 package ru.klonwar.checkers;
 
+import ru.klonwar.checkers.gui.MainFrame;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.util.Locale;

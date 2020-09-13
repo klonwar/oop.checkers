@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.geometry;
+package ru.klonwar.checkers.helpers.geometry;
 
 public class Vector extends Point {
     public Vector(int x, int y) {
@@ -6,13 +6,11 @@ public class Vector extends Point {
     }
 
     public Vector(Point start, Point end) {
-        super(end.x - start.x, end.y - start.y);
+        super(end.getX() - start.getX(), end.getY() - start.getY());
     }
 
     @Override
     public Point clone() {
-        super.clone();
-
-        return new Vector(x, y);
+        return super.clone();
     }
 }

@@ -1,19 +1,16 @@
-package ru.klonwar.checkers;
-
-import ru.klonwar.checkers.field.FieldJPanel;
+package ru.klonwar.checkers.gui;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class MainFrame extends JFrame {
 
     private JPanel body;
-    private JButton button1;
+    private JButton restartButton;
     private JButton button2;
     private JPanel fieldContainer;
     private JLabel playerName;
 
-    MainFrame() {
+    public MainFrame() {
         this.setTitle("Шашки");
         this.setContentPane(body);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,5 +22,9 @@ public class MainFrame extends JFrame {
 
         FieldJPanel field = new FieldJPanel();
         fieldContainer.add(field);
+
+        restartButton.addActionListener(e -> {
+            field.restart();
+        });
     }
 }
