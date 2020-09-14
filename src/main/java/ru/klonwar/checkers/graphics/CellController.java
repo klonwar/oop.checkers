@@ -37,6 +37,11 @@ public class CellController {
             MyGraphics.drawSquareWithCenter(g2d, center, width - Config.LINE_STROKE);
         }
 
+        if (cell.isRequired()) {
+            g2d.setColor(Config.REQUIRED_COLOR);
+            MyGraphics.drawSquareWithCenter(g2d, center, width - Config.LINE_STROKE);
+        }
+
         if (cell.isActive()) {
             g2d.setColor(Config.ACTIVE_COLOR);
             MyGraphics.drawSquareWithCenter(g2d, center, width - Config.LINE_STROKE);

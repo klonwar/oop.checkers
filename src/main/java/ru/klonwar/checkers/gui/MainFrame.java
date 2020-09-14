@@ -8,7 +8,6 @@ public class MainFrame extends JFrame {
     private JButton restartButton;
     private JButton button2;
     private JPanel fieldContainer;
-    private JLabel playerName;
 
     public MainFrame() {
         this.setTitle("Шашки");

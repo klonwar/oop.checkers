@@ -1,6 +1,7 @@
 package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.graphics.FieldController;
+import ru.klonwar.checkers.graphics.MoveController;
 import ru.klonwar.checkers.helpers.geometry.Point;
 
 import javax.swing.*;

@@ -4,6 +4,7 @@ public class Cell {
     private Checker checker;
     private boolean active = false;
     private boolean possible = false;
+    private boolean required = false;
 
     public Cell(Checker checker) {
         this.checker = checker;
@@ -31,5 +32,13 @@ public class Cell {
 
     public void setPossible(boolean possible) {
         this.possible = possible;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }
