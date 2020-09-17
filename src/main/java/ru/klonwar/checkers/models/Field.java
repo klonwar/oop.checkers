@@ -1,10 +1,8 @@
 package ru.klonwar.checkers.models;
 
-import java.util.ArrayList;
+import ru.klonwar.checkers.helpers.Position;
 
 public class Field {
-    private Cell activeCell = null;
-    private ArrayList<Cell> possibleCells = new ArrayList<>();
     private final Cell[][] fieldState = new Cell[8][8];
 
     public Field() {
@@ -21,27 +19,32 @@ public class Field {
         }
     }
 
+    public static boolean isInField(Position position) {
+        if (position == null) return false;
+        return !(position.getFirst() < 0 ||
+                position.getFirst() >= 8 ||
+                position.getSecond() < 0 ||
+                position.getSecond() >= 8
+        );
+    }
+
+    public Cell getCellFromPosition(Position position) {
+        if (!Field.isInField(position)) return null;
+        return fieldState[position.getFirst()][position.getSecond()];
+    }
+
+    public Position getPositionFromCell(Cell cell) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (cell == fieldState[i][j]) {
+                    return new Position(i, j);
+                }
+            }
+        }
+        return null;
+    }
+
     public Cell[][] getFieldState() {
         return fieldState;
-    }
-
-    public Cell getActiveCell() {
-        return activeCell;
-    }
-
-    public void setActiveCell(Cell activeCell) {
-        this.activeCell = activeCell;
-    }
-
-    public ArrayList<Cell> getPossibleCells() {
-        return possibleCells;
-    }
-
-    public void clearPossibleCells() {
-        this.possibleCells = new ArrayList<>();
-    }
-
-    public void setPossibleCells(ArrayList<Cell> possibleCells) {
-        this.possibleCells = possibleCells;
     }
 }

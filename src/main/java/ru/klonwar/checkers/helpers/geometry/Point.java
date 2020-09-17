@@ -26,14 +26,6 @@ public class Point implements Cloneable {
         return this;
     }
 
-    static public Point fromEvent(MouseEvent e) {
-        return new Point(e.getX(), e.getY());
-    }
-
-    static public Point copy(Point point) {
-        return new Point(point.x, point.y);
-    }
-
     @Override
     public Point clone() {
         try {

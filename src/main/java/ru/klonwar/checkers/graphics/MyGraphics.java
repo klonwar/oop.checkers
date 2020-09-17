@@ -19,6 +19,14 @@ public final class MyGraphics {
         g2d.fillRect(center.getX() - w/2, center.getY() - w/2, w, w);
     }
 
+    public static void drawRectWithCenter(Graphics2D g2d, Point center, int w, int h) {
+        g2d.drawRect(center.getX() - w/2, center.getY() - h/2, w, h);
+    }
+
+    public static void fillRectWithCenter(Graphics2D g2d, Point center, int w, int h) {
+        g2d.fillRect(center.getX() - w/2, center.getY() - h/2, w, h);
+    }
+
     public static void drawCircleWithCenter(Graphics2D g2d, ru.klonwar.checkers.helpers.geometry.Point center, int r) {
         g2d.drawOval(center.getX() - r, center.getY() - r, r * 2, r * 2);
     }

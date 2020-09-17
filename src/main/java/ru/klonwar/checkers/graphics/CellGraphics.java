@@ -1,5 +1,6 @@
 package ru.klonwar.checkers.graphics;
 
+import ru.klonwar.checkers.config.ColorEnum;
 import ru.klonwar.checkers.config.Config;
 import ru.klonwar.checkers.helpers.geometry.Point;
 import ru.klonwar.checkers.helpers.geometry.Vector;
@@ -7,43 +8,43 @@ import ru.klonwar.checkers.models.Cell;
 
 import java.awt.*;
 
-public class CellController {
-    private final CheckerController checkerController;
+public class CellGraphics {
+    private final CheckerGraphics checkerController;
     private Point leftTop = new Point(0, 0);
     private Point rightBot = new Point(0, 0);
     private final Color cellColor;
     private Cell cell;
 
-    public CellController(Cell cell, Color cellColor) {
+    public CellGraphics(Cell cell, Color cellColor) {
         this.cell = cell;
         this.cellColor = cellColor;
 
-        checkerController = new CheckerController(cell);
+        checkerController = new CheckerGraphics(cell);
     }
 
     private boolean isPointInsideCell(Point point) {
         return (point.getX() >= leftTop.getX() && point.getX() <= rightBot.getX() && point.getY() >= leftTop.getY() && point.getY() <= rightBot.getY());
     }
 
-    public void paint(Point center, int width, Graphics2D g2d) {
+    public void paint(Graphics2D g2d, Point center, int width, boolean active, boolean availableToGoTo, boolean availableToClick) {
         leftTop = center.clone().addVector(new Vector(-1 * (width) / 2, -1 * (width) / 2));
         rightBot = center.clone().addVector(new Vector(width / 2, width / 2));
 
         g2d.setColor(cellColor);
         MyGraphics.fillSquareWithCenter(g2d, center, width);
 
-        if (cell.isPossible()) {
-            g2d.setColor(Config.POSSIBLE_COLOR);
+        if (availableToGoTo) {
+            g2d.setColor(ColorEnum.POSSIBLE_COLOR.getColor());
             MyGraphics.drawSquareWithCenter(g2d, center, width - Config.LINE_STROKE);
         }
 
-        if (cell.isRequired()) {
-            g2d.setColor(Config.REQUIRED_COLOR);
+        if (availableToClick) {
+            g2d.setColor(ColorEnum.REQUIRED_COLOR.getColor());
             MyGraphics.drawSquareWithCenter(g2d, center, width - Config.LINE_STROKE);
         }
 
-        if (cell.isActive()) {
-            g2d.setColor(Config.ACTIVE_COLOR);
+        if (active) {
+            g2d.setColor(ColorEnum.ACTIVE_COLOR.getColor());
             MyGraphics.drawSquareWithCenter(g2d, center, width - Config.LINE_STROKE);
         }
         // ... cell.getChecker();
@@ -63,7 +64,7 @@ public class CellController {
         this.cell = cell;
     }
 
-    public CheckerController getCheckerController() {
+    public CheckerGraphics getCheckerController() {
         return this.checkerController;
     }
 
