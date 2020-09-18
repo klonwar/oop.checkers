@@ -34,4 +34,8 @@ public final class MyGraphics {
     public static void fillCircleWithCenter(Graphics2D g2d, Point center, int r) {
         g2d.fillOval(center.getX() - r, center.getY() - r, r * 2, r * 2);
     }
+
+    public static void fillArcWithCenter(Graphics2D g2d, Point center, int r, int startAngle, int endAngle) {
+        g2d.fillArc(center.getX() - r, center.getY() - r, r * 2, r * 2, startAngle, endAngle);
+    }
 }

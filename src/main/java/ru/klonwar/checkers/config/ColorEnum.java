@@ -8,6 +8,7 @@ public enum ColorEnum {
     BACKGROUND,
     WHITE_CHECKER,
     BLACK_CHECKER,
+    KING_ACCENT,
     CELL_BRIGHT,
     CELL_DARK,
     ACTIVE_COLOR,
@@ -33,6 +34,7 @@ public enum ColorEnum {
             case POSSIBLE_COLOR:
                 return new Color(76, 175, 80);
             case REQUIRED_COLOR:
+            case KING_ACCENT:
                 return new Color(255, 213, 79);
             default:
                 return new Color(0,0,0);

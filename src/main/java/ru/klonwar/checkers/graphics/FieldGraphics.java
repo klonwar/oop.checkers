@@ -12,15 +12,12 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class FieldGraphics {
-    private final Field field;
     private final CellGraphics[][] cellControllers = new CellGraphics[8][8];
 
     private int width = 1;
     private final Point[] corners = new Point[4];
 
     public FieldGraphics(Field field) {
-        this.field = field;
-
         Cell[][] fieldState = field.getFieldState();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -40,6 +37,7 @@ public class FieldGraphics {
 
     private void clearField(Graphics2D g2d) {
         g2d.setColor(ColorEnum.BACKGROUND.getColor());
+        //noinspection SuspiciousNameCombination
         g2d.fillRect(0, 0, width, width);
     }
 
@@ -76,22 +74,6 @@ public class FieldGraphics {
 
         clearField(g2d);
         drawGrid(g2d, activeCell, availableToGoTo, availableToClick);
-    }
-
-    private Position getPosition(Cell cell) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (cell == cellControllers[i][j].getCell()) {
-                    return new Position(i, j);
-                }
-            }
-        }
-        return null;
-    }
-
-    private Cell getCellFromPosition(Position position) {
-        if (!Field.isInField(position)) return null;
-        return cellControllers[position.getFirst()][position.getSecond()].getCell();
     }
 
     public Position getClickedPosition(Point point) {

@@ -74,8 +74,9 @@ public class JPanelController {
             }
         }
 
-
-        fieldGraphics.paint(g2d, size, player.getActiveCell(), availableToGoTo, player.getAvailableToClickCells());
-        moveGraphics.paint(g2d, player.getColor(), new Point(size, 0));
+        if (!game.haveWinner()) {
+            fieldGraphics.paint(g2d, size, player.getActiveCell(), availableToGoTo, player.getAvailableToClickCells());
+        }
+        moveGraphics.paint(g2d, player.getColor(), new Point(size, 0), game.haveWinner());
     }
 }

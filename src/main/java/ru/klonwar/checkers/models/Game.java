@@ -6,7 +6,7 @@ public class Game {
     private final Field field;
     private int activePlayerIndex = 1;
     private final Player[] players = new Player[playersCount];
-    private boolean gameOver;
+    private Integer winner = null;
 
     {
         field = new Field();
@@ -25,9 +25,26 @@ public class Game {
         if (activePlayerIndex >= players.length) activePlayerIndex = 0;
 
         getActivePlayer().suggestPossibleMoves();
+        if (getActivePlayer().getAvailableToClickCells().size() == 0) {
+            --activePlayerIndex;
+            if (activePlayerIndex < 0) activePlayerIndex = 1;
+            setWinner(activePlayerIndex);
+        }
     }
 
     public Field getField() {
         return field;
+    }
+
+    public boolean haveWinner() {
+        return winner != null;
+    }
+
+    public Integer getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Integer winner) {
+        this.winner = winner;
     }
 }

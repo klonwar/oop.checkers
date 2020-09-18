@@ -6,7 +6,7 @@ import ru.klonwar.checkers.helpers.Position;
 import java.util.ArrayList;
 
 public class Player {
-    private Field field;
+    private final Field field;
     private final int color;
 
     private ArrayList<Pair<Position, Position>> availableMoves = new ArrayList<>();
@@ -25,6 +25,7 @@ public class Player {
 
         int deltaH = Math.round(Math.signum(to.getFirst() - from.getFirst()));
         int deltaV = Math.round(Math.signum(to.getSecond() - from.getSecond()));
+
         Cell toCell = field.getCellFromPosition(to);
         Cell fromCell = field.getCellFromPosition(from);
 
@@ -50,6 +51,13 @@ public class Player {
 
         if (!endOfTurn && findPossibleMovesFor(toCell).getSecond().size() == 0) {
             endOfTurn = true;
+        }
+
+        Checker checker = toCell.getChecker();
+        if (!(checker instanceof King)) {
+            if (to.getSecond() == 0 && color == 1 || to.getSecond() == 7 && color == 0) {
+                toCell.setChecker(new King(checker.getColor()));
+            }
         }
 
         setActiveCell(toCell);
