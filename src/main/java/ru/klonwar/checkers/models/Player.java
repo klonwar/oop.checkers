@@ -40,24 +40,27 @@ public class Player {
 
                 if (toCell == null || fromCell == null) return true;
 
+                if (toCell.getChecker() != null) {
+                    endOfTurn = false;
+                }
+
                 toCell.setChecker(fromCell.getChecker());
                 fromCell.setChecker(null);
 
                 fromCell = toCell;
             }
-
-            endOfTurn = iterationsCount <= 1;
-        }
-
-        if (!endOfTurn && findPossibleMovesFor(toCell).getSecond().size() == 0) {
-            endOfTurn = true;
         }
 
         Checker checker = toCell.getChecker();
         if (!(checker instanceof King)) {
             if (to.getSecond() == 0 && color == 1 || to.getSecond() == 7 && color == 0) {
                 toCell.setChecker(new King(checker.getColor()));
+                suggestPossibleMoves();
             }
+        }
+
+        if (!endOfTurn && findPossibleMovesFor(toCell).getSecond().size() == 0) {
+            endOfTurn = true;
         }
 
         setActiveCell(toCell);
@@ -133,9 +136,9 @@ public class Player {
         }
 
         if (nowChecker instanceof King) {
-            // todo
             for (int i = -1; i <= 1; i += 2) {
                 for (int j = -1; j <= 1; j += 2) {
+                    boolean evilCheckerReached = false;
                     Position target = new Position(now.getFirst(), now.getSecond());
                     while (true) {
                         target = new Position(target.getFirst() + i, target.getSecond() + j);
@@ -147,9 +150,13 @@ public class Player {
                         if (targetChecker == null) {
                             // Ячейка свободна
                             possible.add(target);
+                            if (evilCheckerReached) {
+                                required.add(target);
+                            }
                             continue;
                         } else if (color != targetChecker.getColor()) {
                             // В ячейке есть шашка противника
+                            // Смотрим на следующую
                             target = new Position(target.getFirst() + i, target.getSecond() + j);
                             targetCell = field.getCellFromPosition(target);
                             if (targetCell == null) break;
@@ -158,6 +165,7 @@ public class Player {
                             if (targetChecker == null) {
                                 // В следующей - пусто
                                 required.add(target);
+                                evilCheckerReached = true;
                                 continue;
                             } else {
                                 // Занято
