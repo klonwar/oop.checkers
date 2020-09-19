@@ -66,11 +66,14 @@ public class JPanelController {
         Player player = game.getActivePlayer();
         Position activePosition = game.getField().getPositionFromCell(player.getActiveCell());
 
+
+
         ArrayList<Cell> availableToGoTo = new ArrayList<>();
         if (activePosition != null) {
             for (Pair<Position, Position> item : player.getAvailableMoves()) {
-                if (item.getFirst().equals(activePosition))
+                if (item.getFirst().equals(activePosition)) {
                     availableToGoTo.add(game.getField().getCellFromPosition(item.getSecond()));
+                }
             }
         }
 

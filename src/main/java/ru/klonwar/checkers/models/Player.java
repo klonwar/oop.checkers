@@ -110,8 +110,6 @@ public class Player {
     }
 
     private Pair<ArrayList<Position>, ArrayList<Position>> findPossibleMovesFor(Cell target) {
-        Boolean[][] checkableField = new Boolean[8][8];
-        Position position = field.getPositionFromCell(target);
 
         /*
          * Т.к. при возможности бить шашку необходимо это сделать, то
@@ -121,67 +119,112 @@ public class Player {
 
         ArrayList<Position> possible = new ArrayList<>();
         ArrayList<Position> required = new ArrayList<>();
-        fpcRecursion(checkableField, possible, required, position, position);
+        fpcRecursion(possible, required, field.getPositionFromCell(target));
 
         return new Pair<>(possible, required);
     }
 
-    private void fpcRecursion(Boolean[][] checkableField, ArrayList<Position> possible, ArrayList<Position> required, Position now, Position target) {
-        if (!Field.isInField(now) || checkableField[now.getFirst()][now.getSecond()] != null) {
-            return;
-        }
-
-        checkableField[now.getFirst()][now.getSecond()] = true;
-
+    private void fpcRecursion(ArrayList<Position> possible, ArrayList<Position> required, Position now) {
         Cell nowCell = field.getFieldState()[now.getFirst()][now.getSecond()];
-        Cell targetCell = field.getFieldState()[target.getFirst()][target.getSecond()];
+        Checker nowChecker = nowCell.getChecker();
 
-        if (targetCell.getChecker() == null) {
+        if (nowChecker == null || nowChecker.getColor() != color) {
             return;
         }
 
-        int nowH = now.getFirst();
-        int nowV = now.getSecond();
-        int targetH = target.getFirst();
-        int targetV = target.getSecond();
+        if (nowChecker instanceof King) {
+            // todo
+            for (int i = -1; i <= 1; i += 2) {
+                for (int j = -1; j <= 1; j += 2) {
+                    Position target = new Position(now.getFirst(), now.getSecond());
+                    while (true) {
+                        target = new Position(target.getFirst() + i, target.getSecond() + j);
+                        Cell targetCell = field.getCellFromPosition(target);
+                        // Ячейки на этой позиции нет
+                        if (targetCell == null) break;
 
-        if (nowCell.getChecker() == null) {
-            Checker targetChecker = targetCell.getChecker();
-            if (targetChecker instanceof King) {
-                // todo
-            } else {
-                if (targetChecker.getColor() == 0) {
-                    if (nowV - targetV == 1 && Math.abs(nowH - targetH) == 1) {
-                        possible.add(now);
-                    }
-                } else {
-                    if (targetV - nowV == 1 && Math.abs(nowH - targetH) == 1) {
-                        possible.add(now);
+                        Checker targetChecker = targetCell.getChecker();
+                        if (targetChecker == null) {
+                            // Ячейка свободна
+                            possible.add(target);
+                            continue;
+                        } else if (color != targetChecker.getColor()) {
+                            // В ячейке есть шашка противника
+                            target = new Position(target.getFirst() + i, target.getSecond() + j);
+                            targetCell = field.getCellFromPosition(target);
+                            if (targetCell == null) break;
+
+                            targetChecker = targetCell.getChecker();
+                            if (targetChecker == null) {
+                                // В следующей - пусто
+                                required.add(target);
+                                continue;
+                            } else {
+                                // Занято
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
                     }
                 }
+            }
+        } else {
+            for (int i = -1; i <= 1; i += 2) {
+                for (int j = -1; j <= 1; j += 2) {
+                    Position target = new Position(now.getFirst() + i, now.getSecond() + j);
+                    Cell targetCell = field.getCellFromPosition(target);
+                    // Ячейки на этой позиции нет
+                    if (targetCell == null) continue;
 
-                int deltaV = targetV - nowV;
-                int deltaH = targetH - nowH;
+                    Checker targetChecker = targetCell.getChecker();
+                    if (targetChecker == null && (color == 0 && j > 0 || color == 1 && j < 0)) {
+                        // Ячейка свободна, и шашка текущего цвета может идти в ее направлении
+                        possible.add(target);
+                    } else if (targetChecker != null && color != targetChecker.getColor()) {
+                        // В ячейке есть шашка противника, в следующей - пусто
+                        target = new Position(now.getFirst() + 2 * i, now.getSecond() + 2 * j);
+                        targetCell = field.getCellFromPosition(target);
+                        if (targetCell == null) continue;
 
-                if (Math.abs(deltaV) == 2 && Math.abs(deltaH) == 2) {
-                    int evilH = targetH - deltaH / 2;
-                    int evilV = targetV - deltaV / 2;
-                    if (Field.isInField(new Position(evilH, evilV))) {
-                        Checker evilChecker = field.getFieldState()[evilH][evilV].getChecker();
+                        targetChecker = targetCell.getChecker();
+                        if (targetChecker == null) {
+                            required.add(target);
 
-                        if (evilChecker != null && evilChecker.getColor() != targetChecker.getColor()) {
-                            required.add(now);
                         }
                     }
                 }
             }
         }
 
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                fpcRecursion(checkableField, possible, required, new Position(now.getFirst() + i, now.getSecond() + j), target);
+
+
+        /*
+        if (targetChecker.getColor() == 0) {
+            if (nowV - targetV == 1 && Math.abs(nowH - targetH) == 1) {
+                possible.add(now);
+            }
+        } else {
+            if (targetV - nowV == 1 && Math.abs(nowH - targetH) == 1) {
+                possible.add(now);
             }
         }
+
+        int deltaV = targetV - nowV;
+        int deltaH = targetH - nowH;
+
+        if (Math.abs(deltaV) == 2 && Math.abs(deltaH) == 2) {
+            int evilH = targetH - deltaH / 2;
+            int evilV = targetV - deltaV / 2;
+            if (Field.isInField(new Position(evilH, evilV))) {
+                Checker evilChecker = field.getFieldState()[evilH][evilV].getChecker();
+
+                if (evilChecker != null && evilChecker.getColor() != targetChecker.getColor()) {
+                    required.add(now);
+                }
+            }
+        }
+        */
 
     }
 
