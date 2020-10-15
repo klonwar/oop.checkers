@@ -38,7 +38,7 @@ public class JPanelController {
             boolean endOfTurn = player.moveChecker(activePosition, clickedPosition);
             if (endOfTurn) {
                 game.switchPlayer();
-                player.clearHints();
+                player.clearActiveCell();
             } else {
                 ArrayList<Cell> temp = new ArrayList<>();
                 temp.add(player.getActiveCell());
@@ -59,14 +59,12 @@ public class JPanelController {
     }
 
     public void clearHints() {
-        game.getActivePlayer().clearHints();
+        game.getActivePlayer().clearActiveCell();
     }
 
     public void paint(Graphics2D g2d, int size) {
         Player player = game.getActivePlayer();
         Position activePosition = game.getField().getPositionFromCell(player.getActiveCell());
-
-
 
         ArrayList<Cell> availableToGoTo = new ArrayList<>();
         if (activePosition != null) {

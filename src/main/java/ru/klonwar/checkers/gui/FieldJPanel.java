@@ -4,10 +4,7 @@ import ru.klonwar.checkers.helpers.geometry.Point;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class FieldJPanel extends JPanel {
     private JPanelController jpanelController = new JPanelController();
@@ -17,29 +14,17 @@ public class FieldJPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 jpanelController.onClick(new Point(e.getX(), e.getY()));
-
                 repaint();
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
                 requestFocusInWindow();
-
                 repaint();
             }
         });
 
-        addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-
+        addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {

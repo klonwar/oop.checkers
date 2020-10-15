@@ -9,18 +9,18 @@ import ru.klonwar.checkers.models.Cell;
 import ru.klonwar.checkers.models.Field;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public class FieldGraphics {
-    private final CellGraphics[][] cellControllers = new CellGraphics[8][8];
+    private final CellGraphics[][] cellControllers = new CellGraphics[Field.height][Field.width];
 
     private int width = 1;
     private final Point[] corners = new Point[4];
 
     public FieldGraphics(Field field) {
         Cell[][] fieldState = field.getFieldState();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < Field.height; i++) {
+            for (int j = 0; j < Field.width; j++) {
                 cellControllers[i][j] = new CellGraphics(fieldState[i][j], ((i + j) % 2 == 0) ? ColorEnum.CELL_BRIGHT.getColor() : ColorEnum.CELL_DARK.getColor());
             }
         }
@@ -28,7 +28,7 @@ public class FieldGraphics {
 
     private void setWidth(int w) {
         width = w;
-        int padding = -(getCellWidth() * 8 - width) / 2;
+        int padding = -(getCellWidth() * Field.width - width) / 2;
         corners[0] = new Point(padding, padding);
         corners[1] = new Point(w - padding, padding);
         corners[2] = new Point(w - padding, w - padding);
@@ -42,7 +42,7 @@ public class FieldGraphics {
     }
 
     private int getCellWidth() {
-        return width / 8;
+        return width / Field.width;
     }
 
     private Point getCellCenter(int x, int y) {
@@ -54,12 +54,12 @@ public class FieldGraphics {
         return checkerCenter;
     }
 
-    private void drawGrid(Graphics2D g2d, Cell activeCell, ArrayList<Cell> availableToGoTo, ArrayList<Cell> availableToClick) {
+    private void drawGrid(Graphics2D g2d, Cell activeCell, List<Cell> availableToGoTo, List<Cell> availableToClick) {
         g2d.setStroke(new BasicStroke(Config.LINE_STROKE));
         g2d.setColor(ColorEnum.CELL_BRIGHT.getColor());
 
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < Field.height; i++) {
+            for (int j = 0; j < Field.width; j++) {
                 boolean active = cellControllers[i][j].getCell() == activeCell;
                 boolean availableTGT = availableToGoTo.contains(cellControllers[i][j].getCell());
                 boolean availableTC = availableToClick.contains(cellControllers[i][j].getCell());
@@ -69,7 +69,7 @@ public class FieldGraphics {
         }
     }
 
-    public void paint(Graphics2D g2d, int width, Cell activeCell, ArrayList<Cell> availableToGoTo, ArrayList<Cell> availableToClick) {
+    public void paint(Graphics2D g2d, int width, Cell activeCell, List<Cell> availableToGoTo, List<Cell> availableToClick) {
         setWidth(width);
 
         clearField(g2d);
@@ -77,8 +77,8 @@ public class FieldGraphics {
     }
 
     public Position getClickedPosition(Point point) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < Field.height; i++) {
+            for (int j = 0; j < Field.width; j++) {
                 Cell clicked = cellControllers[i][j].onClick(point);
                 if (clicked != null) {
                     return new Position(i, j);

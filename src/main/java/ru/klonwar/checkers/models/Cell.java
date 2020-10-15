@@ -14,4 +14,10 @@ public class Cell {
     public void setChecker(Checker checker) {
         this.checker = checker;
     }
+
+    @Override
+    public String toString() {
+        String res = (checker != null) ? checker.toString() : " ";
+        return "[" + res + "]";
+    }
 }

@@ -4,13 +4,14 @@ import ru.klonwar.checkers.helpers.Pair;
 import ru.klonwar.checkers.helpers.Position;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Player {
+public class Player implements Colored {
     private final Field field;
     private final int color;
 
-    private ArrayList<Pair<Position, Position>> availableMoves = new ArrayList<>();
-    private ArrayList<Cell> availableToClickCells = new ArrayList<>();
+    private List<Pair<Position, Position>> availableMoves = new ArrayList<>();
+    private List<Cell> availableToClickCells = new ArrayList<>();
     private Cell activeCell = null;
 
     public Player(Field field, int color) {
@@ -20,72 +21,63 @@ public class Player {
         suggestPossibleMoves();
     }
 
-    public boolean moveChecker(Position from, Position to) {
-        boolean endOfTurn = true;
+    /**
+     * Игрок передвигает шашку из позиции <code>from</code> в позицию <code>to</code>
+     */
 
-        int deltaH = Math.round(Math.signum(to.getFirst() - from.getFirst()));
-        int deltaV = Math.round(Math.signum(to.getSecond() - from.getSecond()));
+    public boolean moveChecker(Position from, Position to) {
+        boolean endOfTurn;
 
         Cell toCell = field.getCellFromPosition(to);
         Cell fromCell = field.getCellFromPosition(from);
+        if (fromCell.getChecker() == null) return false;
 
-        if (deltaH != 0 || deltaV != 0) {
-            int iterationsCount = 0;
-            for (
-                    int i = from.getFirst() + deltaH, j = from.getSecond() + deltaV;
-                    ((deltaH >= 0) ? i <= to.getFirst() : i >= to.getFirst()) || ((deltaV >= 0) ? j <= to.getSecond() : j >= to.getSecond());
-                    i += deltaH, j += deltaV, iterationsCount++
-            ) {
-                toCell = field.getCellFromPosition(new Position(i, j));
+        // Переместим шашку, параллельно поедая все шашки на пути
+        endOfTurn = fromCell.getChecker().eatEverything(field, from, to);
 
-                if (toCell == null || fromCell == null) return true;
-
-                if (toCell.getChecker() != null) {
-                    endOfTurn = false;
-                }
-
-                toCell.setChecker(fromCell.getChecker());
-                fromCell.setChecker(null);
-
-                fromCell = toCell;
-            }
-        }
-
+        // Если надо - превратим в дамку
         Checker checker = toCell.getChecker();
-        if (!(checker instanceof King)) {
-            if (to.getSecond() == 0 && color == 1 || to.getSecond() == 7 && color == 0) {
-                toCell.setChecker(new King(checker.getColor()));
-                suggestPossibleMoves();
-            }
+        if (checker.canBecomeKing(to)) {
+            toCell.setChecker(new King(checker.getColor()));
+            suggestPossibleMoves();
         }
 
-        if (!endOfTurn && findPossibleMovesFor(toCell).getSecond().size() == 0) {
+        // Если ходов точно нет
+        if (!endOfTurn && toCell.getChecker().findPossibleMoves(field).getSecond().size() == 0) {
             endOfTurn = true;
         }
 
         setActiveCell(toCell);
-        suggestPossibleMoves();
 
         return endOfTurn;
     }
 
-    public void clearHints() {
+    /**
+     * Игрок убирает фокус с ячейки
+     */
+
+    public void clearActiveCell() {
         activeCell = null;
     }
+
+    /**
+     * Игрок анализирует доску и запоминает все возможные или
+     * обязательные ходы своими шашками
+     */
 
     public void suggestPossibleMoves() {
         availableMoves = new ArrayList<>();
         availableToClickCells = new ArrayList<>();
 
-        ArrayList<Cell> requiredCells = new ArrayList<>();
-        ArrayList<Pair<Position, Position>> requiredMoves = new ArrayList<>();
+        List<Cell> requiredCells = new ArrayList<>();
+        List<Pair<Position, Position>> requiredMoves = new ArrayList<>();
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Cell item = field.getFieldState()[i][j];
 
                 if (item.getChecker() != null && item.getChecker().getColor() == color) {
-                    Pair<ArrayList<Position>, ArrayList<Position>> response = findPossibleMovesFor(item);
+                    Pair<List<Position>, List<Position>> response = item.getChecker().findPossibleMoves(field);
 
                     for (Position to : response.getFirst()) {
                         availableMoves.add(new Pair<>(new Position(i, j), to));
@@ -112,137 +104,11 @@ public class Player {
         }
     }
 
-    private Pair<ArrayList<Position>, ArrayList<Position>> findPossibleMovesFor(Cell target) {
-
-        /*
-         * Т.к. при возможности бить шашку необходимо это сделать, то
-         * введем два массива: possible и required, которые помогут
-         * отделить котлеты от мух
-         * */
-
-        ArrayList<Position> possible = new ArrayList<>();
-        ArrayList<Position> required = new ArrayList<>();
-        fpcRecursion(possible, required, field.getPositionFromCell(target));
-
-        return new Pair<>(possible, required);
-    }
-
-    private void fpcRecursion(ArrayList<Position> possible, ArrayList<Position> required, Position now) {
-        Cell nowCell = field.getFieldState()[now.getFirst()][now.getSecond()];
-        Checker nowChecker = nowCell.getChecker();
-
-        if (nowChecker == null || nowChecker.getColor() != color) {
-            return;
-        }
-
-        if (nowChecker instanceof King) {
-            for (int i = -1; i <= 1; i += 2) {
-                for (int j = -1; j <= 1; j += 2) {
-                    boolean evilCheckerReached = false;
-                    Position target = new Position(now.getFirst(), now.getSecond());
-                    while (true) {
-                        target = new Position(target.getFirst() + i, target.getSecond() + j);
-                        Cell targetCell = field.getCellFromPosition(target);
-                        // Ячейки на этой позиции нет
-                        if (targetCell == null) break;
-
-                        Checker targetChecker = targetCell.getChecker();
-                        if (targetChecker == null) {
-                            // Ячейка свободна
-                            possible.add(target);
-                            if (evilCheckerReached) {
-                                required.add(target);
-                            }
-                            continue;
-                        } else if (color != targetChecker.getColor()) {
-                            // В ячейке есть шашка противника
-                            // Смотрим на следующую
-                            target = new Position(target.getFirst() + i, target.getSecond() + j);
-                            targetCell = field.getCellFromPosition(target);
-                            if (targetCell == null) break;
-
-                            targetChecker = targetCell.getChecker();
-                            if (targetChecker == null) {
-                                // В следующей - пусто
-                                required.add(target);
-                                evilCheckerReached = true;
-                                continue;
-                            } else {
-                                // Занято
-                                break;
-                            }
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-        } else {
-            for (int i = -1; i <= 1; i += 2) {
-                for (int j = -1; j <= 1; j += 2) {
-                    Position target = new Position(now.getFirst() + i, now.getSecond() + j);
-                    Cell targetCell = field.getCellFromPosition(target);
-                    // Ячейки на этой позиции нет
-                    if (targetCell == null) continue;
-
-                    Checker targetChecker = targetCell.getChecker();
-                    if (targetChecker == null && (color == 0 && j > 0 || color == 1 && j < 0)) {
-                        // Ячейка свободна, и шашка текущего цвета может идти в ее направлении
-                        possible.add(target);
-                    } else if (targetChecker != null && color != targetChecker.getColor()) {
-                        // В ячейке есть шашка противника, в следующей - пусто
-                        target = new Position(now.getFirst() + 2 * i, now.getSecond() + 2 * j);
-                        targetCell = field.getCellFromPosition(target);
-                        if (targetCell == null) continue;
-
-                        targetChecker = targetCell.getChecker();
-                        if (targetChecker == null) {
-                            required.add(target);
-
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        /*
-        if (targetChecker.getColor() == 0) {
-            if (nowV - targetV == 1 && Math.abs(nowH - targetH) == 1) {
-                possible.add(now);
-            }
-        } else {
-            if (targetV - nowV == 1 && Math.abs(nowH - targetH) == 1) {
-                possible.add(now);
-            }
-        }
-
-        int deltaV = targetV - nowV;
-        int deltaH = targetH - nowH;
-
-        if (Math.abs(deltaV) == 2 && Math.abs(deltaH) == 2) {
-            int evilH = targetH - deltaH / 2;
-            int evilV = targetV - deltaV / 2;
-            if (Field.isInField(new Position(evilH, evilV))) {
-                Checker evilChecker = field.getFieldState()[evilH][evilV].getChecker();
-
-                if (evilChecker != null && evilChecker.getColor() != targetChecker.getColor()) {
-                    required.add(now);
-                }
-            }
-        }
-        */
-
-    }
-
-
     public int getColor() {
         return color;
     }
 
-
-    public ArrayList<Pair<Position, Position>> getAvailableMoves() {
+    public List<Pair<Position, Position>> getAvailableMoves() {
         return availableMoves;
     }
 
@@ -250,16 +116,20 @@ public class Player {
         return activeCell;
     }
 
+    /**
+     * Игрок фокусируется на ячейке
+     */
+
     public void setActiveCell(Cell activeCell) {
         this.activeCell = activeCell;
         suggestPossibleMoves();
     }
 
-    public ArrayList<Cell> getAvailableToClickCells() {
+    public List<Cell> getAvailableToClickCells() {
         return availableToClickCells;
     }
 
-    public void setAvailableToClickCells(ArrayList<Cell> availableToClickCells) {
+    public void setAvailableToClickCells(List<Cell> availableToClickCells) {
         this.availableToClickCells = availableToClickCells;
     }
 }

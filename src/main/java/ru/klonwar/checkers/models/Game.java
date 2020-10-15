@@ -8,7 +8,7 @@ public class Game {
     private final Player[] players = new Player[playersCount];
     private Integer winner = null;
 
-    {
+    public Game() {
         field = new Field();
 
         for (int i = 0; i < playersCount; i++) {
@@ -20,14 +20,28 @@ public class Game {
         return players[activePlayerIndex];
     }
 
-    public void switchPlayer() {
-        activePlayerIndex++;
-        if (activePlayerIndex >= players.length) activePlayerIndex = 0;
+    private void changePlayerIndex() {
+        activePlayerIndex = (activePlayerIndex == 1) ? 0 : 1;
+    }
 
+    /**
+     * Механика смены активного игрока на следующего
+     * */
+
+    public void switchPlayer() {
+        changePlayerIndex();
+        checkWinner();
+    }
+
+    /**
+     * Проверка активного игрока на наличие ходов
+     * */
+
+    public void checkWinner() {
         getActivePlayer().suggestPossibleMoves();
         if (getActivePlayer().getAvailableToClickCells().size() == 0) {
-            --activePlayerIndex;
-            if (activePlayerIndex < 0) activePlayerIndex = 1;
+            // Если у текущего игрока нет ходов, то победил предыдущий
+            changePlayerIndex();
             setWinner(activePlayerIndex);
         }
     }
