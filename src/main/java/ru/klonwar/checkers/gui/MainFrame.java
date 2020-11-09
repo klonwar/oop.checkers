@@ -1,13 +1,13 @@
 package ru.klonwar.checkers.gui;
 
+import ru.klonwar.checkers.models.database.UserPair;
+
 import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame extends JFrame {
-
     private JPanel body;
-    private JButton restartButton;
-    private JButton button2;
-    private JPanel fieldContainer;
+    private Timer loginListener;
 
     public MainFrame() {
         this.setTitle("Шашки");
@@ -19,11 +19,22 @@ public class MainFrame extends JFrame {
         this.setFocusable(true);
         this.setVisible(true);
 
-        FieldJPanel field = new FieldJPanel();
-        fieldContainer.add(field);
+        body.setBackground(Color.white);
+        CardLayout cl = new CardLayout();
+        body.setLayout(cl);
 
-        restartButton.addActionListener(e -> {
-            field.restart();
+        UserPair up = new UserPair(null, null);
+
+        body.add(new LoginPanel(up), "Login");
+        body.add(new GamePanel(), "Game");
+
+        loginListener = new Timer(10, (e) -> {
+            if (!up.equals(UserPair.NULL_PAIR)) {
+                cl.next(body);
+                body.remove(0);
+                loginListener.stop();
+            }
         });
+        loginListener.start();
     }
 }

@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.models;
+package ru.klonwar.checkers.models.game;
 
 import ru.klonwar.checkers.helpers.Pair;
 import ru.klonwar.checkers.helpers.Position;

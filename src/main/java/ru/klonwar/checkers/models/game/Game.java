@@ -1,4 +1,6 @@
-package ru.klonwar.checkers.models;
+package ru.klonwar.checkers.models.game;
+
+import ru.klonwar.checkers.models.database.UserItem;
 
 public class Game {
     private final int playersCount = 2;
@@ -6,6 +8,7 @@ public class Game {
     private final Field field;
     private int activePlayerIndex = 1;
     private final Player[] players = new Player[playersCount];
+    private final UserItem[] users = new UserItem[playersCount];
     private Integer winner = null;
 
     public Game() {
@@ -60,5 +63,14 @@ public class Game {
 
     public void setWinner(Integer winner) {
         this.winner = winner;
+    }
+
+    public void setUsers(UserItem first, UserItem second) {
+        users[0] = first;
+        users[1] = second;
+    }
+
+    public UserItem[] getUsers() {
+        return users;
     }
 }

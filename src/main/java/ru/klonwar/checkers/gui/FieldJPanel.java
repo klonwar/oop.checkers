@@ -7,9 +7,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class FieldJPanel extends JPanel {
-    private JPanelController jpanelController = new JPanelController();
+    private GameGraphics jpanelController;
 
     public FieldJPanel() {
+        jpanelController = new GameGraphics();
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -30,6 +31,9 @@ public class FieldJPanel extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     jpanelController.clearHints();
                     repaint();
+                } else if (e.getKeyCode() == KeyEvent.VK_R && e.isControlDown()) {
+                    restart();
+                    repaint();
                 }
             }
         });
@@ -47,7 +51,7 @@ public class FieldJPanel extends JPanel {
     }
 
     public void restart() {
-        jpanelController = new JPanelController();
+        jpanelController.restart();
         repaint();
     }
 }

@@ -1,7 +1,11 @@
-package ru.klonwar.checkers.models;
+package ru.klonwar.checkers.models.game;
 
 import org.junit.Assert;
 import org.junit.Test;
+import ru.klonwar.checkers.models.game.Cell;
+import ru.klonwar.checkers.models.game.Field;
+import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.game.Player;
 
 public class GameTest {
     @Test

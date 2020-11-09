@@ -4,8 +4,8 @@ import ru.klonwar.checkers.config.ColorEnum;
 import ru.klonwar.checkers.config.Config;
 import ru.klonwar.checkers.helpers.geometry.Point;
 import ru.klonwar.checkers.helpers.geometry.Vector;
-import ru.klonwar.checkers.models.Cell;
-import ru.klonwar.checkers.models.Checker;
+import ru.klonwar.checkers.models.game.Cell;
+import ru.klonwar.checkers.models.game.Checker;
 
 import java.awt.*;
 
@@ -16,9 +16,9 @@ public class MoveGraphics {
         g2d.setFont(Config.FONT);
         g2d.drawString((gameOver) ? "Победил:" : "Ходит:", point.getX(), point.getY() + Config.FONT_SIZE);
 
-        CheckerGraphics activePlayerChecker = new CheckerGraphics(new Cell(new Checker(color)));
+        CellGraphics activePlayerChecker = new CellGraphics(new Cell(new Checker(color)), ColorEnum.BACKGROUND.getColor());
         int r = Config.FONT_SIZE;
-        activePlayerChecker.paint(new Point(point.getX() + r, point.getY() + 5 * r / 2), r, g2d);
+        activePlayerChecker.paint(g2d, new Point(point.getX() + r, point.getY() + 5 * r / 2), r*2, false, false, false);
 
         if (gameOver) {
             int size = point.getX();

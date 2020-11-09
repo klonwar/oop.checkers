@@ -5,17 +5,28 @@ import ru.klonwar.checkers.graphics.MoveGraphics;
 import ru.klonwar.checkers.helpers.Pair;
 import ru.klonwar.checkers.helpers.Position;
 import ru.klonwar.checkers.helpers.geometry.Point;
-import ru.klonwar.checkers.models.Cell;
-import ru.klonwar.checkers.models.Game;
-import ru.klonwar.checkers.models.Player;
+import ru.klonwar.checkers.models.game.Cell;
+import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.game.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class JPanelController {
-    private final Game game = new Game();
-    private final FieldGraphics fieldGraphics = new FieldGraphics(game.getField());
+public class GameGraphics {
+    private Game game;
+    private FieldGraphics fieldGraphics;
     private final MoveGraphics moveGraphics = new MoveGraphics();
+
+    public GameGraphics() {
+        this.game = new Game();
+        fieldGraphics = new FieldGraphics(game.getField());
+    }
+
+    public void restart() {
+        // todo
+        game = new Game();
+        fieldGraphics = new FieldGraphics(game.getField());
+    }
 
     public void onClick(Point point) {
         Player player = game.getActivePlayer();

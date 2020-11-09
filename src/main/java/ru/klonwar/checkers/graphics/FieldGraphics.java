@@ -5,8 +5,8 @@ import ru.klonwar.checkers.config.Config;
 import ru.klonwar.checkers.helpers.Position;
 import ru.klonwar.checkers.helpers.geometry.Point;
 import ru.klonwar.checkers.helpers.geometry.Vector;
-import ru.klonwar.checkers.models.Cell;
-import ru.klonwar.checkers.models.Field;
+import ru.klonwar.checkers.models.game.Cell;
+import ru.klonwar.checkers.models.game.Field;
 
 import java.awt.*;
 import java.util.List;

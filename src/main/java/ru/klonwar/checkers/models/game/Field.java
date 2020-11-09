@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.models;
+package ru.klonwar.checkers.models.game;
 
 import ru.klonwar.checkers.helpers.Position;
 
@@ -7,9 +7,6 @@ public class Field {
     public static final int height = 8;
 
     private Cell[][] fieldState = new Cell[height][width];
-
-
-    // todo константы width, height
 
     /**
      * При создании объекта <code>Field</code> поле заполняется шашками

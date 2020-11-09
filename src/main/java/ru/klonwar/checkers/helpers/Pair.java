@@ -32,8 +32,8 @@ public class Pair<T1, T2> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pair<?, ?> pair = (Pair<?, ?>) o;
-        return first.equals(pair.first) &&
-                second.equals(pair.second);
+        return Objects.equals(first, pair.first) &&
+                Objects.equals(second, pair.second);
     }
 
     @Override

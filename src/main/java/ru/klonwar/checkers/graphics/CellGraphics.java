@@ -4,12 +4,12 @@ import ru.klonwar.checkers.config.ColorEnum;
 import ru.klonwar.checkers.config.Config;
 import ru.klonwar.checkers.helpers.geometry.Point;
 import ru.klonwar.checkers.helpers.geometry.Vector;
-import ru.klonwar.checkers.models.Cell;
+import ru.klonwar.checkers.models.game.Cell;
+import ru.klonwar.checkers.models.game.King;
 
 import java.awt.*;
 
 public class CellGraphics {
-    private final CheckerGraphics checkerController;
     private Point leftTop = new Point(0, 0);
     private Point rightBot = new Point(0, 0);
     private final Color cellColor;
@@ -19,7 +19,6 @@ public class CellGraphics {
         this.cell = cell;
         this.cellColor = cellColor;
 
-        checkerController = new CheckerGraphics(cell);
     }
 
     private boolean isPointInsideCell(Point point) {
@@ -47,8 +46,16 @@ public class CellGraphics {
             g2d.setColor(ColorEnum.ACTIVE_COLOR.getColor());
             MyGraphics.drawSquareWithCenter(g2d, center, width - Config.LINE_STROKE);
         }
-        // ... cell.getChecker();
-        this.checkerController.paint(center, 2 * width / 5, g2d);
+
+        if (cell.getChecker() != null) {
+            g2d.setColor((cell.getChecker().getColor() == 0) ? ColorEnum.BLACK_CHECKER.getColor() : ColorEnum.WHITE_CHECKER.getColor());
+            MyGraphics.fillCircleWithCenter(g2d, center, 2 * width / 5);
+
+            if (cell.getChecker() instanceof King) {
+                g2d.setColor(ColorEnum.KING_ACCENT.getColor());
+                MyGraphics.fillArcWithCenter(g2d, center, 2 * width / 5, 45, -4*45);
+            }
+        }
     }
 
     public Cell onClick(Point point) {
@@ -62,10 +69,6 @@ public class CellGraphics {
 
     public void setCell(Cell cell) {
         this.cell = cell;
-    }
-
-    public CheckerGraphics getCheckerController() {
-        return this.checkerController;
     }
 
 }

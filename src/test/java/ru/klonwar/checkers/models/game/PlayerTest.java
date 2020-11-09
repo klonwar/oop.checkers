@@ -1,8 +1,11 @@
-package ru.klonwar.checkers.models;
+package ru.klonwar.checkers.models.game;
 
 import org.junit.Assert;
 import org.junit.Test;
 import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.models.game.Checker;
+import ru.klonwar.checkers.models.game.Field;
+import ru.klonwar.checkers.models.game.Player;
 
 public class PlayerTest {
     @Test
@@ -37,4 +40,5 @@ public class PlayerTest {
         Assert.assertNull(field.getCellFromPosition(new Position(1, 4)).getChecker());
 
     }
+
 }

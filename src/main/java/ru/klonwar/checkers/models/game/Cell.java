@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.models;
+package ru.klonwar.checkers.models.game;
 
 public class Cell {
     private Checker checker;

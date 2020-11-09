@@ -1,5 +1,6 @@
 package ru.klonwar.checkers;
 
+
 import ru.klonwar.checkers.gui.MainFrame;
 
 import javax.swing.*;
@@ -7,7 +8,6 @@ import javax.swing.plaf.FontUIResource;
 import java.util.Locale;
 
 public class App {
-
     private static void setDefaultFont(String fontName, int size) {
         UIManager.getDefaults().forEach((key, value1) -> {
             Object value = UIManager.get(key);
@@ -28,7 +28,8 @@ public class App {
         Locale.setDefault(Locale.ROOT);
         setDefaultFont("monospace", 14);
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> (new MainFrame()).setVisible(true));
+        MainFrame mf = new MainFrame();
+        mf.setVisible(true);
+
     }
 }
