@@ -1,25 +1,21 @@
 package ru.klonwar.checkers.gui;
 
-import ru.klonwar.checkers.models.database.DatabaseHelper;
-import ru.klonwar.checkers.models.database.UserItem;
-import ru.klonwar.checkers.models.database.UserPair;
+import ru.klonwar.checkers.models.database.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.Flow;
 
 public class LoginPanel extends JPanel {
-    private JTextField user1_login = new JTextField("login1");
-    private JTextField user1_password = new JTextField("password");
-    private JButton loginButton = new JButton("Вход");
-    private JTextField user2_login = new JTextField("login2");
-    private JTextField user2_password = new JTextField("password");
-    private JTextField register_login = new JTextField();
-    private JTextField register_password = new JTextField();
-    private JTextArea consoleOutput = new JTextArea();
-    private JButton registerButton = new JButton("Зарегистрироваться");
+    private final JTextField user1_login = new JTextField("login1");
+    private final JTextField user1_password = new JTextField("password");
+    private final JButton loginButton = new JButton("Вход");
+    private final JTextField user2_login = new JTextField("login2");
+    private final JTextField user2_password = new JTextField("password");
+    private final JTextField register_login = new JTextField();
+    private final JTextField register_password = new JTextField();
+    private final JTextArea consoleOutput = new JTextArea();
 
-    public LoginPanel(UserPair up) {
+    public LoginPanel(UserPair up, CheckersDatabase db, Runnable switchToInfo) {
         setLayout(new GridLayout(0, 3, 10, 10));
 
         // Вход
@@ -43,6 +39,7 @@ public class LoginPanel extends JPanel {
         regPanel.add(new JLabel("Регистриация", JLabel.CENTER));
         regPanel.add(register_login);
         regPanel.add(register_password);
+        JButton registerButton = new JButton("Зарегистрироваться");
         regPanel.add(registerButton);
 
         // Консоль
@@ -59,8 +56,6 @@ public class LoginPanel extends JPanel {
         add(regPanel);
         add(consolePanel);
 
-        DatabaseHelper db = new DatabaseHelper();
-
         loginButton.addActionListener((e) -> {
             String login1 = user1_login.getText();
             String password1 = user1_password.getText();
@@ -68,8 +63,8 @@ public class LoginPanel extends JPanel {
             String login2 = user2_login.getText();
             String password2 = user2_password.getText();
 
-            UserItem user1 = db.getUserByLoginAndPassword(login1, password1);
-            UserItem user2 = db.getUserByLoginAndPassword(login2, password2);
+            User user1 = db.getUserByLoginAndPassword(login1, password1);
+            User user2 = db.getUserByLoginAndPassword(login2, password2);
 
             if (user1 == null || user2 == null) {
                 String[] logStr = new String[2];
@@ -88,8 +83,10 @@ public class LoginPanel extends JPanel {
                 return;
             }
 
+            loginButton.setEnabled(false);
             up.setFirst(user1);
             up.setSecond(user2);
+            SwingUtilities.invokeLater(switchToInfo);
         });
 
         registerButton.addActionListener((e) -> {
@@ -105,18 +102,8 @@ public class LoginPanel extends JPanel {
                 return;
             }
 
-            int res = db.addUser(login, password);
-            switch (res) {
-                case 0:
-                    log("Пользователь успешно зарегистрирован");
-                    break;
-                case 1:
-                    log("Такой пользователь уже зарегистрирован");
-                    break;
-                default:
-                    log("Ошибка");
-                    break;
-            }
+            QueryResponse res = db.addUser(new User(-1, login, password));
+            log(res.getMessage());
         });
     }
 

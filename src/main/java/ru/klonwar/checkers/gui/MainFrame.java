@@ -1,15 +1,18 @@
 package ru.klonwar.checkers.gui;
 
+import ru.klonwar.checkers.helpers.Link;
+import ru.klonwar.checkers.models.database.CheckersDatabase;
+import ru.klonwar.checkers.models.database.SQLDatabase;
 import ru.klonwar.checkers.models.database.UserPair;
+import ru.klonwar.checkers.models.game.Game;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
     private JPanel body;
-    private Timer loginListener;
 
-    public MainFrame() {
+    public MainFrame(CheckersDatabase db) {
         this.setTitle("Шашки");
         this.setContentPane(body);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,16 +28,34 @@ public class MainFrame extends JFrame {
 
         UserPair up = new UserPair(null, null);
 
-        body.add(new LoginPanel(up), "Login");
-        body.add(new GamePanel(), "Game");
+        InfoPanel ip;
+        Link<GamePanel> gpLink = new Link<>();
+        LoginPanel lp;
 
-        loginListener = new Timer(10, (e) -> {
-            if (!up.equals(UserPair.NULL_PAIR)) {
+        ip = new InfoPanel(up, db, () -> {
+            if (gpLink.item != null) {
+                gpLink.item.setGame(new Game(up.getFirst(), up.getSecond(), db));
                 cl.next(body);
-                body.remove(0);
-                loginListener.stop();
             }
         });
-        loginListener.start();
+
+        gpLink.item = new GamePanel( () -> {
+            ip.showInfoFromDB();
+            cl.next(body);
+        });
+
+        lp = new LoginPanel(up, db, () -> {
+            if (!up.equals(UserPair.NULL_PAIR)) {
+                ip.showInfoFromDB();
+                cl.next(body);
+                body.remove(0);
+            }
+        });
+
+        body.add(lp, "Login");
+        body.add(ip, "Info");
+        body.add(gpLink.item, "Game");
     }
+
+
 }

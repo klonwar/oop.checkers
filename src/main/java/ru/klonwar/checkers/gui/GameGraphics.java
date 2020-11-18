@@ -1,10 +1,14 @@
 package ru.klonwar.checkers.gui;
 
+import ru.klonwar.checkers.config.ColorEnum;
+import ru.klonwar.checkers.config.Config;
 import ru.klonwar.checkers.graphics.FieldGraphics;
 import ru.klonwar.checkers.graphics.MoveGraphics;
+import ru.klonwar.checkers.graphics.MyGraphics;
 import ru.klonwar.checkers.helpers.Pair;
 import ru.klonwar.checkers.helpers.Position;
 import ru.klonwar.checkers.helpers.geometry.Point;
+import ru.klonwar.checkers.helpers.geometry.Vector;
 import ru.klonwar.checkers.models.game.Cell;
 import ru.klonwar.checkers.models.game.Game;
 import ru.klonwar.checkers.models.game.Player;
@@ -13,59 +17,61 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class GameGraphics {
-    private Game game;
-    private FieldGraphics fieldGraphics;
+    private Game game = null;
+    private FieldGraphics fieldGraphics = null;
     private final MoveGraphics moveGraphics = new MoveGraphics();
 
-    public GameGraphics() {
-        this.game = new Game();
+    public void setGame(Game game) {
+        this.game = game;
         fieldGraphics = new FieldGraphics(game.getField());
     }
 
     public void restart() {
         // todo
-        game = new Game();
-        fieldGraphics = new FieldGraphics(game.getField());
+        // game = new Game();
+        // fieldGraphics = new FieldGraphics(game.getField());
     }
 
     public void onClick(Point point) {
-        Player player = game.getActivePlayer();
+        if (game != null) {
+            Player player = game.getActivePlayer();
 
-        Cell activeCell = player.getActiveCell();
-        Position activePosition = game.getField().getPositionFromCell(activeCell);
+            Cell activeCell = player.getActiveCell();
+            Position activePosition = game.getField().getPositionFromCell(activeCell);
 
-        Position clickedPosition = fieldGraphics.getClickedPosition(point);
-        Cell clickedCell = game.getField().getCellFromPosition(clickedPosition);
+            Position clickedPosition = fieldGraphics.getClickedPosition(point);
+            Cell clickedCell = game.getField().getCellFromPosition(clickedPosition);
 
-        if (clickedPosition == null || clickedCell == null) return;
+            if (clickedPosition == null || clickedCell == null) return;
 
-        /*
-         * Передвижение шашки
-         * Если после хода больше вариантов нет,
-         * то ход переходит к другому игроку
-         * */
+            /*
+             * Передвижение шашки
+             * Если после хода больше вариантов нет,
+             * то ход переходит к другому игроку
+             * */
 
-        if (activePosition != null && player.getAvailableMoves().contains(new Pair<>(activePosition, clickedPosition))) {
-            boolean endOfTurn = player.moveChecker(activePosition, clickedPosition);
-            if (endOfTurn) {
-                game.switchPlayer();
-                player.clearActiveCell();
-            } else {
-                ArrayList<Cell> temp = new ArrayList<>();
-                temp.add(player.getActiveCell());
-                player.setAvailableToClickCells(temp);
+            if (activePosition != null && player.getAvailableMoves().contains(new Pair<>(activePosition, clickedPosition))) {
+                boolean endOfTurn = player.moveChecker(activePosition, clickedPosition);
+                if (endOfTurn) {
+                    game.switchPlayer();
+                    player.clearActiveCell();
+                } else {
+                    ArrayList<Cell> temp = new ArrayList<>();
+                    temp.add(player.getActiveCell());
+                    player.setAvailableToClickCells(temp);
+                }
+                return;
             }
-            return;
-        }
 
-        /*
-         * При клике на ячейку она станет активной
-         * */
+            /*
+             * При клике на ячейку она станет активной
+             * */
 
-        if (clickedCell == player.getActiveCell()) {
-            player.setActiveCell(null);
-        } else if (clickedCell.getChecker() != null && clickedCell.getChecker().getColor() == player.getColor() && player.getAvailableToClickCells().contains(clickedCell)) {
-            player.setActiveCell(clickedCell);
+            if (clickedCell == player.getActiveCell()) {
+                player.setActiveCell(null);
+            } else if (clickedCell.getChecker() != null && clickedCell.getChecker().getColor() == player.getColor() && player.getAvailableToClickCells().contains(clickedCell)) {
+                player.setActiveCell(clickedCell);
+            }
         }
     }
 
@@ -74,21 +80,28 @@ public class GameGraphics {
     }
 
     public void paint(Graphics2D g2d, int size) {
-        Player player = game.getActivePlayer();
-        Position activePosition = game.getField().getPositionFromCell(player.getActiveCell());
+        if (game != null) {
+            Player player = game.getActivePlayer();
+            Position activePosition = game.getField().getPositionFromCell(player.getActiveCell());
 
-        ArrayList<Cell> availableToGoTo = new ArrayList<>();
-        if (activePosition != null) {
-            for (Pair<Position, Position> item : player.getAvailableMoves()) {
-                if (item.getFirst().equals(activePosition)) {
-                    availableToGoTo.add(game.getField().getCellFromPosition(item.getSecond()));
+            ArrayList<Cell> availableToGoTo = new ArrayList<>();
+            if (activePosition != null) {
+                for (Pair<Position, Position> item : player.getAvailableMoves()) {
+                    if (item.getFirst().equals(activePosition)) {
+                        availableToGoTo.add(game.getField().getCellFromPosition(item.getSecond()));
+                    }
                 }
             }
-        }
 
-        if (!game.haveWinner()) {
-            fieldGraphics.paint(g2d, size, player.getActiveCell(), availableToGoTo, player.getAvailableToClickCells());
+            if (!game.haveWinner()) {
+                fieldGraphics.paint(g2d, size, player.getActiveCell(), availableToGoTo, player.getAvailableToClickCells());
+            }
+            moveGraphics.paint(g2d, player, new Point(size, 0), game.haveWinner());
+        } else {
+            g2d.setColor(ColorEnum.BLACK.getColor());
+            g2d.setFont(Config.FONT);
+            g2d.drawString("Игра не начата", 0, Config.FONT_SIZE);
         }
-        moveGraphics.paint(g2d, player.getColor(), new Point(size, 0), game.haveWinner());
     }
+
 }

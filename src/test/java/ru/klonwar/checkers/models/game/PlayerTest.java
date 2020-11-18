@@ -3,16 +3,14 @@ package ru.klonwar.checkers.models.game;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.klonwar.checkers.helpers.Position;
-import ru.klonwar.checkers.models.game.Checker;
-import ru.klonwar.checkers.models.game.Field;
-import ru.klonwar.checkers.models.game.Player;
+import ru.klonwar.checkers.mocks.MockUsers;
 
 public class PlayerTest {
     @Test
     public void playerMoveCheckerCorrectly() {
         Field field = new Field();
-        Player player0 = new Player(field, 0);
-        Player player1 = new Player(field, 1);
+        Player player0 = new Player(MockUsers.USER_1, field, 0);
+        Player player1 = new Player(MockUsers.USER_2, field, 1);
 
         Checker checker0;
         Checker checker1;

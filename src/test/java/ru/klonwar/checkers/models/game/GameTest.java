@@ -2,15 +2,37 @@ package ru.klonwar.checkers.models.game;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.klonwar.checkers.models.game.Cell;
-import ru.klonwar.checkers.models.game.Field;
-import ru.klonwar.checkers.models.game.Game;
-import ru.klonwar.checkers.models.game.Player;
+import ru.klonwar.checkers.models.database.*;
+import ru.klonwar.checkers.mocks.MockUsers;
+
+import java.util.List;
 
 public class GameTest {
+    private CheckersDatabase testDb = new CheckersDatabase() {
+        @Override
+        public QueryResponse addUser(User user) {
+            return null;
+        }
+
+        @Override
+        public QueryResponse addGame(Game game) {
+            return null;
+        }
+
+        @Override
+        public List<GameInfo> getGamesInfoForUserID(int userID) {
+            return null;
+        }
+
+        @Override
+        public User getUserByLoginAndPassword(String login, String password) {
+            return null;
+        }
+    };
+
     @Test
     public void switchingCorrectly() {
-        Game game = new Game();
+        Game game = new Game(MockUsers.USER_1, MockUsers.USER_2, testDb);
         Player first = game.getActivePlayer();
 
         game.switchPlayer();
@@ -22,7 +44,7 @@ public class GameTest {
 
     @Test
     public void winnerDetectingCorrectly() {
-        Game game = new Game();
+        Game game = new Game(MockUsers.USER_1, MockUsers.USER_2, testDb);
         Field field = game.getField();
         Player first = game.getActivePlayer();
 

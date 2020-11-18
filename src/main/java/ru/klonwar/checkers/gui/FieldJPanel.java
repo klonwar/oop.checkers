@@ -1,20 +1,22 @@
 package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.helpers.geometry.Point;
+import ru.klonwar.checkers.models.database.CheckersDatabase;
+import ru.klonwar.checkers.models.game.Game;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class FieldJPanel extends JPanel {
-    private GameGraphics jpanelController;
+    private final GameGraphics jpanelGraphics;
 
-    public FieldJPanel() {
-        jpanelController = new GameGraphics();
+    public FieldJPanel(Runnable switchCards) {
+        jpanelGraphics = new GameGraphics();
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                jpanelController.onClick(new Point(e.getX(), e.getY()));
+                jpanelGraphics.onClick(new Point(e.getX(), e.getY()));
                 repaint();
             }
 
@@ -29,14 +31,22 @@ public class FieldJPanel extends JPanel {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    jpanelController.clearHints();
+                    jpanelGraphics.clearHints();
                     repaint();
                 } else if (e.getKeyCode() == KeyEvent.VK_R && e.isControlDown()) {
                     restart();
                     repaint();
+                } else if (e.getKeyCode() == KeyEvent.VK_F1) {
+                    SwingUtilities.invokeLater(switchCards);
                 }
             }
         });
+
+        requestFocusInWindow();
+    }
+
+    public void setGame(Game game) {
+        jpanelGraphics.setGame(game);
     }
 
     @Override
@@ -47,11 +57,11 @@ public class FieldJPanel extends JPanel {
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHints(rh);
 
-        jpanelController.paint(g2d, Math.min(getWidth(), getHeight()));
+        jpanelGraphics.paint(g2d, Math.min(getWidth(), getHeight()));
     }
 
     public void restart() {
-        jpanelController.restart();
+        jpanelGraphics.restart();
         repaint();
     }
 }

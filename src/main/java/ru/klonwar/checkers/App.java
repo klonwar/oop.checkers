@@ -2,10 +2,15 @@ package ru.klonwar.checkers;
 
 
 import ru.klonwar.checkers.gui.MainFrame;
+import ru.klonwar.checkers.models.database.CheckersDatabase;
+import ru.klonwar.checkers.models.database.SQLDatabase;
+import ru.klonwar.checkers.models.database.XMLDatabase;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
+import java.io.FileInputStream;
 import java.util.Locale;
+import java.util.Properties;
 
 public class App {
     private static void setDefaultFont(String fontName, int size) {
@@ -28,7 +33,23 @@ public class App {
         Locale.setDefault(Locale.ROOT);
         setDefaultFont("monospace", 14);
 
-        MainFrame mf = new MainFrame();
+        String dbSource;
+        try {
+            Properties p = new Properties();
+            p.load(new FileInputStream("./app.properties"));
+            dbSource = p.get("db-source").toString();
+        } catch (Exception e) {
+            dbSource = "error";
+        }
+
+        CheckersDatabase db;
+        if ("xml".equals(dbSource)) {
+            db = new XMLDatabase();
+        } else {
+            db = new SQLDatabase();
+        }
+
+        MainFrame mf = new MainFrame(db);
         mf.setVisible(true);
 
     }

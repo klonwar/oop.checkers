@@ -2,6 +2,7 @@ package ru.klonwar.checkers.models.game;
 
 import ru.klonwar.checkers.helpers.Pair;
 import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.models.database.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +10,30 @@ import java.util.List;
 public class Player implements Colored {
     private final Field field;
     private final int color;
+    private final User user;
 
     private List<Pair<Position, Position>> availableMoves = new ArrayList<>();
     private List<Cell> availableToClickCells = new ArrayList<>();
     private Cell activeCell = null;
 
-    public Player(Field field, int color) {
+    public Player(User user, Field field, int color) {
+        this.user = user;
         this.color = color;
         this.field = field;
 
         suggestPossibleMoves();
+    }
+
+    public int getId() {
+        return user.getId();
+    }
+
+    public String getLogin() {
+        return user.getLogin();
+    }
+
+    public String getPassword() {
+        return user.getPassword();
     }
 
     /**
@@ -104,6 +119,7 @@ public class Player implements Colored {
         }
     }
 
+    @Override
     public int getColor() {
         return color;
     }
