@@ -1,13 +1,23 @@
 package ru.klonwar.checkers.models.database;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 public class GameInfo {
-    private final int id;
+    @JsonProperty("ID")
+    private int id;
+    @JsonProperty("WHITE_USER_ID")
     private int whiteUserId;
+    @JsonProperty("BLACK_USER_ID")
     private int blackUserId;
+    @JsonProperty("WINNER")
     private int activePlayer;
+    @JsonProperty("FINISH_TIME")
     private long finishTime;
+
+    public GameInfo() {
+    }
 
     public GameInfo(int id, int whiteUserId, int blackUserId, int activePlayer, long finishTime) {
         this.id = id;

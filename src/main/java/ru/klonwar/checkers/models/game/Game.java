@@ -5,6 +5,7 @@ import ru.klonwar.checkers.models.database.QueryResponse;
 import ru.klonwar.checkers.models.database.User;
 import ru.klonwar.checkers.models.game.Field;
 import ru.klonwar.checkers.models.game.Player;
+import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import javax.swing.*;
 
@@ -18,11 +19,11 @@ public class Game {
     private Long finishTime = null;
     private CheckersDatabase db;
 
-    public Game(User user1, User user2, CheckersDatabase database) {
+    public Game(ConnectionState cs, CheckersDatabase database) {
         field = new Field();
         User[] users = new User[2];
-        users[0] = user1;
-        users[1] = user2;
+        users[0] = cs.thisUser;
+        users[1] = cs.opponentUser;
 
         int absolutelyRandomIndex = (int) Math.abs((System.currentTimeMillis()) % 2);
         int anotherIndex = (absolutelyRandomIndex == 0) ? 1 : 0;

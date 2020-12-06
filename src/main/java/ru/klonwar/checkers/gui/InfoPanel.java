@@ -2,8 +2,8 @@ package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.database.GameInfo;
-import ru.klonwar.checkers.models.database.SQLDatabase;
 import ru.klonwar.checkers.models.database.UserPair;
+import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class InfoPanel extends JPanel {
     UserPair up;
     private final CheckersDatabase db;
 
-    public InfoPanel(UserPair up, CheckersDatabase db, Runnable switchCards) {
+    public InfoPanel(ConnectionState cs, CheckersDatabase db, Runnable switchCards) {
         this.db = db;
         setLayout(new GridLayout(0, 3, 10, 10));
         this.up = up;

@@ -1,9 +1,10 @@
 package ru.klonwar.checkers;
 
 
-import ru.klonwar.checkers.gui.MainFrame;
+import ru.klonwar.checkers.gui.P2PFrame;
+import ru.klonwar.checkers.models.database.APIDatabase;
 import ru.klonwar.checkers.models.database.CheckersDatabase;
-import ru.klonwar.checkers.models.database.SQLDatabase;
+import ru.klonwar.checkers.models.database.H2Database;
 import ru.klonwar.checkers.models.database.XMLDatabase;
 
 import javax.swing.*;
@@ -33,24 +34,31 @@ public class App {
         Locale.setDefault(Locale.ROOT);
         setDefaultFont("monospace", 14);
 
-        String dbSource;
+        String dbSource = "api";
+        String gameMode = "single";
         try {
             Properties p = new Properties();
             p.load(new FileInputStream("./app.properties"));
             dbSource = p.get("db-source").toString();
+            gameMode = p.get("mode").toString();
         } catch (Exception e) {
             dbSource = "error";
+        }
+
+        if (!gameMode.equals("single")) {
+            dbSource = "api";
         }
 
         CheckersDatabase db;
         if ("xml".equals(dbSource)) {
             db = new XMLDatabase();
+        } else if ("api".equals(dbSource)) {
+            db = new APIDatabase();
         } else {
-            db = new SQLDatabase();
+            db = new H2Database();
         }
 
-        MainFrame mf = new MainFrame(db);
-        mf.setVisible(true);
-
+        P2PFrame p2pf = new P2PFrame(db);
+        p2pf.setVisible(true);
     }
 }

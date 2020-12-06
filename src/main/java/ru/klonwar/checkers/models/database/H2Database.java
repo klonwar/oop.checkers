@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class SQLDatabase implements CheckersDatabase {
+public class H2Database implements CheckersDatabase {
     public static final String USER_TABLE_CREATE_SCRIPT = "create table USER\n" +
             "(\n" +
             "\tID INT auto_increment\n" +
@@ -36,7 +36,7 @@ public class SQLDatabase implements CheckersDatabase {
             "\n";
     private final String sqlLink;
 
-    public SQLDatabase() {
+    public H2Database() {
         try {
             Properties p = new Properties();
             p.load(new FileInputStream("./app.properties"));
@@ -46,7 +46,7 @@ public class SQLDatabase implements CheckersDatabase {
         }
     }
 
-    public SQLDatabase(String sqlLink) {
+    public H2Database(String sqlLink) {
         this.sqlLink = sqlLink;
     }
 

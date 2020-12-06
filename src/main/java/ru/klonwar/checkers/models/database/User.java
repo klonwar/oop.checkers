@@ -1,11 +1,16 @@
 package ru.klonwar.checkers.models.database;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Objects;
 
 public class User {
-    private final int id;
-    private final String login;
-    private final String password;
+    private int id;
+    private String login;
+    private String password;
+
+    public User() {
+    }
 
     public User(int id, String login, String password) {
         this.id = id;
@@ -48,4 +53,5 @@ public class User {
                 ", password='" + password + '\'' +
                 '}';
     }
+
 }

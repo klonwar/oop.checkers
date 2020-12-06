@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-public class SQLDatabaseTest {
-    private SQLDatabase testDb;
+public class H2DatabaseTest {
+    private H2Database testDb;
 
     @Before
     public void initObjects() {
@@ -22,11 +22,11 @@ public class SQLDatabaseTest {
             p.load(new FileInputStream("./app.properties"));
             String testSqlLink = p.get("sql-test-link").toString();
 
-            testDb = new SQLDatabase(testSqlLink);
+            testDb = new H2Database(testSqlLink);
 
             try (Connection connection = testDb.getConnection()) {
-                connection.prepareStatement(SQLDatabase.USER_TABLE_CREATE_SCRIPT).execute();
-                connection.prepareStatement(SQLDatabase.GAME_TABLE_CREATE_SCRIPT).execute();
+                connection.prepareStatement(H2Database.USER_TABLE_CREATE_SCRIPT).execute();
+                connection.prepareStatement(H2Database.GAME_TABLE_CREATE_SCRIPT).execute();
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
