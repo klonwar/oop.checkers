@@ -4,10 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.klonwar.checkers.helpers.Pair;
 import ru.klonwar.checkers.helpers.Position;
-import ru.klonwar.checkers.models.game.Cell;
-import ru.klonwar.checkers.models.game.Checker;
-import ru.klonwar.checkers.models.game.Field;
-import ru.klonwar.checkers.models.game.King;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,9 @@ public class CheckerTest {
 
         setEmptyState(field);
         field.getFieldState()[4][4] = new Cell(new Checker(1));
-        field.getFieldState()[0][0] = new Cell(new King(0));
+        Checker king = new Checker(0);
+        king.becomeKing();
+        field.getFieldState()[0][0] = new Cell(king);
 
         Assert.assertNotEquals(0, getMovesFromCheckerPosition(field, new Position(0, 0)).size());
         Assert.assertEquals(2, getMovesFromCheckerPosition(field, new Position(4, 4)).size());

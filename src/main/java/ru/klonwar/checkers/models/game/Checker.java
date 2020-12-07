@@ -1,5 +1,7 @@
 package ru.klonwar.checkers.models.game;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import ru.klonwar.checkers.helpers.Pair;
 import ru.klonwar.checkers.helpers.Position;
 
@@ -7,7 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Checker implements Moveable, Colored {
-    private final int color;
+    private int color;
+    @JsonProperty("king")
+    private boolean isKing = false;
+
+    public boolean isKing() {
+        return isKing;
+    }
+
+    public void becomeKing() {
+        isKing = true;
+    }
+
+    public Checker() {
+    }
 
     public Checker(int color) {
         this.color = color;
@@ -56,8 +71,17 @@ public class Checker implements Moveable, Colored {
     public Pair<List<Position>, List<Position>> findPossibleMoves(Field field) {
         List<Position> possible = new ArrayList<>();
         List<Position> required = new ArrayList<>();
-        Position now = field.getPositionFromChecker(this);
 
+        if (isKing())
+            kingMoves(possible, required, field);
+        else
+            checkerMoves(possible, required, field);
+
+        return new Pair<>(possible, required);
+    }
+
+    private void checkerMoves(List<Position> possible, List<Position> required, Field field) {
+        Position now = field.getPositionFromChecker(this);
         for (int i = -1; i <= 1; i += 2) {
             for (int j = -1; j <= 1; j += 2) {
                 Position target = new Position(now.getFirst() + i, now.getSecond() + j);
@@ -83,12 +107,54 @@ public class Checker implements Moveable, Colored {
                 }
             }
         }
+    }
 
+    private void kingMoves(List<Position> possible, List<Position> required, Field field) {
+        Position now = field.getPositionFromChecker(this);
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+                boolean evilCheckerReached = false;
+                Position target = new Position(now.getFirst(), now.getSecond());
+                while (true) {
+                    target = new Position(target.getFirst() + i, target.getSecond() + j);
+                    Cell targetCell = field.getCellFromPosition(target);
+                    // Ячейки на этой позиции нет
+                    if (targetCell == null) break;
 
-        return new Pair<>(possible, required);
+                    Checker targetChecker = targetCell.getChecker();
+                    if (targetChecker == null) {
+                        // Ячейка свободна
+                        possible.add(target);
+                        if (evilCheckerReached) {
+                            required.add(target);
+                        }
+                    } else if (this.getColor() != targetChecker.getColor()) {
+                        // В ячейке есть шашка противника
+                        // Смотрим на следующую
+                        target = new Position(target.getFirst() + i, target.getSecond() + j);
+                        targetCell = field.getCellFromPosition(target);
+                        if (targetCell == null) break;
+
+                        targetChecker = targetCell.getChecker();
+                        if (targetChecker == null) {
+                            // В следующей - пусто
+                            required.add(target);
+                            evilCheckerReached = true;
+                        } else {
+                            // Занято
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public boolean canBecomeKing(Position checkerPosition) {
+        if (isKing())
+            return false;
         return (color == 1) ? checkerPosition.getSecond() == 0 : checkerPosition.getSecond() == 7;
     }
 

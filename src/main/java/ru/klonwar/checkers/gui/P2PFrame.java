@@ -5,6 +5,7 @@ import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.database.User;
 import ru.klonwar.checkers.models.database.UserPair;
 import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.p2p.ClientType;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import javax.swing.*;
@@ -44,12 +45,19 @@ public class P2PFrame extends JFrame {
 
         cp = new ConnectionPanel(connectionState, db, () -> {
             if (gpLink.item != null && connectionState.opponentUser != null) {
+                if (connectionState.thisType == ClientType.HOST) {
+                    this.setTitle("Шашки P2P (Host)");
+                } else {
+                    this.setTitle("Шашки P2P (Guest)");
+                }
+                ip.showInfoFromDB();
                 cl.next(body);
                 body.remove(0);
             }
         });
 
         gpLink.item = new GamePanel( () -> {
+            ip.showInfoFromDB();
             cl.next(body);
         });
 

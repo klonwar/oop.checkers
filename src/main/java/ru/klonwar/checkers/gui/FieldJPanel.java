@@ -1,7 +1,6 @@
 package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.helpers.geometry.Point;
-import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.game.Game;
 
 import javax.swing.*;
@@ -9,14 +8,16 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class FieldJPanel extends JPanel {
-    private final GameGraphics jpanelGraphics;
+    private final GameGraphics gameGraphics;
+    private final Timer repTimer;
 
     public FieldJPanel(Runnable switchCards) {
-        jpanelGraphics = new GameGraphics();
+        gameGraphics = new GameGraphics(this::repaint);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                jpanelGraphics.onClick(new Point(e.getX(), e.getY()));
+                if (gameGraphics.getGame().isEnabled())
+                    gameGraphics.onClick(new Point(e.getX(), e.getY()));
                 repaint();
             }
 
@@ -31,7 +32,7 @@ public class FieldJPanel extends JPanel {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    jpanelGraphics.clearHints();
+                    gameGraphics.clearHints();
                     repaint();
                 } else if (e.getKeyCode() == KeyEvent.VK_R && e.isControlDown()) {
                     restart();
@@ -43,10 +44,14 @@ public class FieldJPanel extends JPanel {
         });
 
         requestFocusInWindow();
+        repTimer = new Timer(100, (e) -> {
+            repaint();
+        });
+        repTimer.start();
     }
 
     public void setGame(Game game) {
-        jpanelGraphics.setGame(game);
+        gameGraphics.setGame(game);
     }
 
     @Override
@@ -57,11 +62,11 @@ public class FieldJPanel extends JPanel {
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHints(rh);
 
-        jpanelGraphics.paint(g2d, Math.min(getWidth(), getHeight()));
+        gameGraphics.paint(g2d, getWidth(), getHeight());
     }
 
     public void restart() {
-        jpanelGraphics.restart();
+        gameGraphics.restart();
         repaint();
     }
 }

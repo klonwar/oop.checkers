@@ -101,4 +101,12 @@ public class Field {
                 res
                 +"}";
     }
+
+    public void copyFrom(Field field) {
+        for (int i=0; i<Field.height; i++) {
+            for (int j = 0; j < Field.height; j++) {
+                fieldState[i][j].setChecker(field.fieldState[i][j].getChecker());
+            }
+        }
+    }
 }

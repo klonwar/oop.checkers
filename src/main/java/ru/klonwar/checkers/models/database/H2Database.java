@@ -4,7 +4,6 @@ import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import ru.klonwar.checkers.models.game.Game;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class H2Database implements CheckersDatabase {
             );
             st.setInt(1, game.getWhitePlayer().getId());
             st.setInt(2, game.getBlackPlayer().getId());
-            st.setInt(3, game.getActivePlayerIndex());
+            st.setInt(3, game.getThisPlayerIndex());
             st.setTimestamp(4, new Timestamp(game.getFinishTime()));
             st.executeUpdate();
             return new QueryResponse(true, "Игра успешно создана");

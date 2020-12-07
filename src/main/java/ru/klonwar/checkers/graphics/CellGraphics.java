@@ -5,7 +5,6 @@ import ru.klonwar.checkers.config.Config;
 import ru.klonwar.checkers.helpers.geometry.Point;
 import ru.klonwar.checkers.helpers.geometry.Vector;
 import ru.klonwar.checkers.models.game.Cell;
-import ru.klonwar.checkers.models.game.King;
 
 import java.awt.*;
 
@@ -51,7 +50,7 @@ public class CellGraphics {
             g2d.setColor((cell.getChecker().getColor() == 0) ? ColorEnum.BLACK_CHECKER.getColor() : ColorEnum.WHITE_CHECKER.getColor());
             MyGraphics.fillCircleWithCenter(g2d, center, 2 * width / 5);
 
-            if (cell.getChecker() instanceof King) {
+            if (cell.getChecker().isKing()) {
                 g2d.setColor(ColorEnum.KING_ACCENT.getColor());
                 MyGraphics.fillArcWithCenter(g2d, center, 2 * width / 5, 45, -4*45);
             }

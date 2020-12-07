@@ -34,30 +34,7 @@ public class App {
         Locale.setDefault(Locale.ROOT);
         setDefaultFont("monospace", 14);
 
-        String dbSource = "api";
-        String gameMode = "single";
-        try {
-            Properties p = new Properties();
-            p.load(new FileInputStream("./app.properties"));
-            dbSource = p.get("db-source").toString();
-            gameMode = p.get("mode").toString();
-        } catch (Exception e) {
-            dbSource = "error";
-        }
-
-        if (!gameMode.equals("single")) {
-            dbSource = "api";
-        }
-
-        CheckersDatabase db;
-        if ("xml".equals(dbSource)) {
-            db = new XMLDatabase();
-        } else if ("api".equals(dbSource)) {
-            db = new APIDatabase();
-        } else {
-            db = new H2Database();
-        }
-
+        CheckersDatabase db = new APIDatabase();
         P2PFrame p2pf = new P2PFrame(db);
         p2pf.setVisible(true);
     }

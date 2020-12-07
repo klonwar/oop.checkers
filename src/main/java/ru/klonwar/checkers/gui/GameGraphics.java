@@ -13,6 +13,7 @@ import ru.klonwar.checkers.models.game.Cell;
 import ru.klonwar.checkers.models.game.Game;
 import ru.klonwar.checkers.models.game.Player;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -20,10 +21,20 @@ public class GameGraphics {
     private Game game = null;
     private FieldGraphics fieldGraphics = null;
     private final MoveGraphics moveGraphics = new MoveGraphics();
+    private final WaitingGraphics waitingGraphics = new WaitingGraphics();
+    private final Runnable repaint;
+
+    public GameGraphics(Runnable repaint) {
+        this.repaint = repaint;
+    }
 
     public void setGame(Game game) {
         this.game = game;
         fieldGraphics = new FieldGraphics(game.getField());
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     public void restart() {
@@ -53,7 +64,15 @@ public class GameGraphics {
             if (activePosition != null && player.getAvailableMoves().contains(new Pair<>(activePosition, clickedPosition))) {
                 boolean endOfTurn = player.moveChecker(activePosition, clickedPosition);
                 if (endOfTurn) {
-                    game.switchPlayer();
+                    SwingUtilities.invokeLater(repaint);
+
+                    game.checkWinner();
+                    // Меняем игрока
+                    if (!game.haveWinner())
+                        game.switchPlayer();
+                    else
+                        game.enable();
+
                     player.clearActiveCell();
                 } else {
                     ArrayList<Cell> temp = new ArrayList<>();
@@ -79,7 +98,8 @@ public class GameGraphics {
         game.getActivePlayer().clearActiveCell();
     }
 
-    public void paint(Graphics2D g2d, int size) {
+    public void paint(Graphics2D g2d, int w, int h) {
+        int size = Math.min(w, h);
         if (game != null) {
             Player player = game.getActivePlayer();
             Position activePosition = game.getField().getPositionFromCell(player.getActiveCell());
@@ -102,6 +122,9 @@ public class GameGraphics {
             g2d.setFont(Config.FONT);
             g2d.drawString("Игра не начата", 0, Config.FONT_SIZE);
         }
+
+        if (!game.isEnabled())
+            waitingGraphics.paint(g2d, w, h);
     }
 
 }

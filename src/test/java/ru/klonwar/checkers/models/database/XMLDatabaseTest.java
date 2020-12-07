@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.klonwar.checkers.mocks.MockUsers;
 import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
@@ -38,7 +39,7 @@ public class XMLDatabaseTest {
 
     @Test
     public void addingGameWorksCorrectly() {
-        Game game = new Game(MockUsers.USER_1, MockUsers.USER_2, testDb);
+        Game game = new Game(new ConnectionState(MockUsers.USER_1, MockUsers.USER_2), testDb);
         QueryResponse qr = game.finish(1);
         Assert.assertTrue(qr.isSuccessful());
 

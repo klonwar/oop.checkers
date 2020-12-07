@@ -24,6 +24,10 @@ public class Player implements Colored {
         suggestPossibleMoves();
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public int getId() {
         return user.getId();
     }
@@ -53,7 +57,7 @@ public class Player implements Colored {
         // Если надо - превратим в дамку
         Checker checker = toCell.getChecker();
         if (checker.canBecomeKing(to)) {
-            toCell.setChecker(new King(checker.getColor()));
+            checker.becomeKing();
             suggestPossibleMoves();
         }
 

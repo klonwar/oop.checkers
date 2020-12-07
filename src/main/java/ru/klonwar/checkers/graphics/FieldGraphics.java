@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.List;
 
 public class FieldGraphics {
-    private final CellGraphics[][] cellControllers = new CellGraphics[Field.height][Field.width];
+    private final CellGraphics[][] cellsGraphics = new CellGraphics[Field.height][Field.width];
 
     private int width = 1;
     private final Point[] corners = new Point[4];
@@ -21,7 +21,7 @@ public class FieldGraphics {
         Cell[][] fieldState = field.getFieldState();
         for (int i = 0; i < Field.height; i++) {
             for (int j = 0; j < Field.width; j++) {
-                cellControllers[i][j] = new CellGraphics(fieldState[i][j], ((i + j) % 2 == 0) ? ColorEnum.CELL_BRIGHT.getColor() : ColorEnum.CELL_DARK.getColor());
+                cellsGraphics[i][j] = new CellGraphics(fieldState[i][j], ((i + j) % 2 == 0) ? ColorEnum.CELL_BRIGHT.getColor() : ColorEnum.CELL_DARK.getColor());
             }
         }
     }
@@ -60,11 +60,11 @@ public class FieldGraphics {
 
         for (int i = 0; i < Field.height; i++) {
             for (int j = 0; j < Field.width; j++) {
-                boolean active = cellControllers[i][j].getCell() == activeCell;
-                boolean availableTGT = availableToGoTo.contains(cellControllers[i][j].getCell());
-                boolean availableTC = availableToClick.contains(cellControllers[i][j].getCell());
+                boolean active = cellsGraphics[i][j].getCell() == activeCell;
+                boolean availableTGT = availableToGoTo.contains(cellsGraphics[i][j].getCell());
+                boolean availableTC = availableToClick.contains(cellsGraphics[i][j].getCell());
 
-                cellControllers[i][j].paint(g2d, getCellCenter(i, j), getCellWidth(), active, availableTGT, availableTC);
+                cellsGraphics[i][j].paint(g2d, getCellCenter(i, j), getCellWidth(), active, availableTGT, availableTC);
             }
         }
     }
@@ -79,7 +79,7 @@ public class FieldGraphics {
     public Position getClickedPosition(Point point) {
         for (int i = 0; i < Field.height; i++) {
             for (int j = 0; j < Field.width; j++) {
-                Cell clicked = cellControllers[i][j].onClick(point);
+                Cell clicked = cellsGraphics[i][j].onClick(point);
                 if (clicked != null) {
                     return new Position(i, j);
                 }

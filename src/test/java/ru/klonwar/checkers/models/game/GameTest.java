@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.klonwar.checkers.models.database.*;
 import ru.klonwar.checkers.mocks.MockUsers;
+import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class GameTest {
 
     @Test
     public void switchingCorrectly() {
-        Game game = new Game(MockUsers.USER_1, MockUsers.USER_2, testDb);
+        Game game = new Game(new ConnectionState(MockUsers.USER_1, MockUsers.USER_2), testDb);
         Player first = game.getActivePlayer();
 
         game.switchPlayer();
@@ -44,7 +45,7 @@ public class GameTest {
 
     @Test
     public void winnerDetectingCorrectly() {
-        Game game = new Game(MockUsers.USER_1, MockUsers.USER_2, testDb);
+        Game game = new Game(new ConnectionState(MockUsers.USER_1, MockUsers.USER_2), testDb);
         Field field = game.getField();
         Player first = game.getActivePlayer();
 

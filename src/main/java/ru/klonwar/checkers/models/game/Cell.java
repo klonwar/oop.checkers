@@ -3,6 +3,9 @@ package ru.klonwar.checkers.models.game;
 public class Cell {
     private Checker checker;
 
+    public Cell() {
+    }
+
     public Cell(Checker checker) {
         this.checker = checker;
     }

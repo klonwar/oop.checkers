@@ -7,6 +7,7 @@ public enum ColorEnum {
     BLACK(new Color(38, 50, 56)),
     CELL_DARK(new Color(38, 50, 56)),
     WHITE(new Color(255, 255, 255)),
+    TRANSPARENT_WHITE(new Color(255, 255, 255, 150)),
     BACKGROUND(new Color(240, 240, 240)),
     CELL_BRIGHT(new Color(240, 240, 240)),
     WHITE_CHECKER(new Color(176, 190, 197)),

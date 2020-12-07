@@ -13,13 +13,13 @@ public class InfoPanel extends JPanel {
     JButton startGameButton = new JButton("Новая игра");
     JTextArea user1Info = new JTextArea();
     JTextArea user2Info = new JTextArea();
-    UserPair up;
     private final CheckersDatabase db;
+    private final ConnectionState cs;
 
     public InfoPanel(ConnectionState cs, CheckersDatabase db, Runnable switchCards) {
         this.db = db;
+        this.cs = cs;
         setLayout(new GridLayout(0, 3, 10, 10));
-        this.up = up;
 
         // User 1 info
         JPanel u1Panel = new JPanel();
@@ -52,8 +52,8 @@ public class InfoPanel extends JPanel {
     }
 
     public void showInfoFromDB() {
-        List<GameInfo> u1GamesList = db.getGamesInfoForUserID(up.getFirst().getId());
-        List<GameInfo> u2GamesList = db.getGamesInfoForUserID(up.getSecond().getId());
+        List<GameInfo> u1GamesList = db.getGamesInfoForUserID(cs.thisUser.getId());
+        List<GameInfo> u2GamesList = db.getGamesInfoForUserID(cs.opponentUser.getId());
 
         user1Info.setText(u1GamesList.toString());
         user2Info.setText(u2GamesList.toString());

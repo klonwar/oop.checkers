@@ -3,6 +3,7 @@ package ru.klonwar.checkers.gui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.database.User;
+import ru.klonwar.checkers.models.p2p.ClientType;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
 import ru.klonwar.checkers.models.p2p.SocketCommunicator;
 
@@ -71,6 +72,9 @@ public class ConnectionPanel extends JPanel {
                 // Передаем данные о себе
                 sc.send(mapper.writeValueAsString(cs.thisUser));
 
+                // Мы стали хостом
+                cs.thisType = ClientType.HOST;
+
                 SwingUtilities.invokeLater(switchCards);
             } catch (IOException ioException) {
                 log(ioException.getMessage());
@@ -95,6 +99,9 @@ public class ConnectionPanel extends JPanel {
                 // Получаем данные о хосте
                 String opponentData = sc.read();
                 cs.opponentUser = mapper.readValue(opponentData, User.class);
+
+                // Мы стали гостем
+                cs.thisType = ClientType.GUEST;
 
                 SwingUtilities.invokeLater(switchCards);
             } catch (IOException ioException) {
