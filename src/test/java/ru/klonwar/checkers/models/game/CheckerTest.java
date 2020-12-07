@@ -2,8 +2,8 @@ package ru.klonwar.checkers.models.game;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.klonwar.checkers.helpers.Pair;
-import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.util.Pair;
+import ru.klonwar.checkers.util.Position;
 
 import java.util.ArrayList;
 import java.util.List;

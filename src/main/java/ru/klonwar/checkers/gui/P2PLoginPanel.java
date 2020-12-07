@@ -1,10 +1,8 @@
 package ru.klonwar.checkers.gui;
 
-import ru.klonwar.checkers.helpers.Link;
 import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.database.QueryResponse;
 import ru.klonwar.checkers.models.database.User;
-import ru.klonwar.checkers.models.database.UserPair;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import javax.swing.*;
@@ -68,7 +66,7 @@ public class P2PLoginPanel extends JPanel {
             }
 
             loginButton.setEnabled(false);
-            connectionState.thisUser = user;
+            connectionState.setThisUser(user);
             SwingUtilities.invokeLater(switchToInfo);
         });
 

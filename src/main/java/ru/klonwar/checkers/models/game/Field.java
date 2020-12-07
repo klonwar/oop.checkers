@@ -1,6 +1,6 @@
 package ru.klonwar.checkers.models.game;
 
-import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.util.Position;
 
 public class Field {
     public static final int width = 8;

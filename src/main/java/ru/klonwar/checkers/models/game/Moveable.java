@@ -1,7 +1,7 @@
 package ru.klonwar.checkers.models.game;
 
-import ru.klonwar.checkers.helpers.Pair;
-import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.util.Pair;
+import ru.klonwar.checkers.util.Position;
 
 import java.util.List;
 

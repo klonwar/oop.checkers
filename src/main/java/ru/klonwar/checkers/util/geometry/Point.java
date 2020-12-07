@@ -1,6 +1,4 @@
-package ru.klonwar.checkers.helpers.geometry;
-
-import java.awt.event.MouseEvent;
+package ru.klonwar.checkers.util.geometry;
 
 public class Point implements Cloneable {
     private int x;

@@ -8,6 +8,7 @@ import ru.klonwar.checkers.models.database.User;
 import ru.klonwar.checkers.models.p2p.ClientType;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
 
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 public class Game {
@@ -26,11 +27,11 @@ public class Game {
         field = new Field();
         this.cs = cs;
 
-        if (cs.thisType == ClientType.HOST) {
+        if (cs.getThisType() == ClientType.HOST) {
             // Распределили цвета
             User[] users = new User[2];
-            users[0] = cs.thisUser;
-            users[1] = cs.opponentUser;
+            users[0] = cs.getThisUser();
+            users[1] = cs.getOpponentUser();
 
             int absolutelyRandomIndex = (int) Math.abs((System.currentTimeMillis()) % 2);
             int anotherIndex = (absolutelyRandomIndex == 0) ? 1 : 0;
@@ -42,34 +43,34 @@ public class Game {
             blackPlayer = new Player(blackUser, field, 0);
 
             // Слушаем, когда гость подключится
-            cs.sc.read();
+            cs.getSc().read();
 
             // Определим свой индекс и отправили гостю его индекс.
             // Ходит вторым, если мы белые
-            this.thisPlayerIndex = (whiteUser == cs.thisUser) ? 0 : 1;
-            var guestIndex = ((whiteUser == cs.thisUser) ? 1 : 0);
-            cs.sc.send(guestIndex + "");
+            this.thisPlayerIndex = (whiteUser == cs.getThisUser()) ? 0 : 1;
+            var guestIndex = ((whiteUser == cs.getThisUser()) ? 1 : 0);
+            cs.getSc().send(guestIndex + "");
         } else {
             // Отправили, что подключены
-            cs.sc.send("ok");
+            if (cs.getSc() != null)
+                cs.getSc().send("ok");
 
             // Получили свой цвет
-            String ans = cs.sc.read();
-            this.thisPlayerIndex = Integer.parseInt(ans);
+            this.thisPlayerIndex = Integer.parseInt((cs.getSc() != null) ? cs.getSc().read() : "0");
 
             // Созадим у себя плееров
             if (thisPlayerIndex == 0) {
                 // Мы сейчас будем ходить
-                whitePlayer = new Player(cs.thisUser, field, 1);
-                blackPlayer = new Player(cs.opponentUser, field, 0);
+                whitePlayer = new Player(cs.getThisUser(), field, 1);
+                blackPlayer = new Player(cs.getOpponentUser(), field, 0);
             } else {
                 // Хост сейчас будет ходить
-                whitePlayer = new Player(cs.opponentUser, field, 1);
-                blackPlayer = new Player(cs.thisUser, field, 0);
+                whitePlayer = new Player(cs.getOpponentUser(), field, 1);
+                blackPlayer = new Player(cs.getThisUser(), field, 0);
             }
         }
 
-        if (whitePlayer.getUser() == cs.thisUser)
+        if (whitePlayer.getUser() == cs.getThisUser())
             enable();
         else
             disable();
@@ -80,21 +81,23 @@ public class Game {
     }
 
     private void disable() {
-        cs.activeUser = false;
+        cs.setActiveUser(false);
+        getActivePlayer().clearActiveCell();
+        getActivePlayer().setAvailableToClickCells(Collections.emptyList());
     }
 
     public void enable() {
-        cs.activeUser = true;
+        cs.setActiveUser(true);
     }
 
     public boolean isEnabled() {
-        return cs.activeUser;
+        return cs.isActiveUser();
     }
 
     private void sendFieldState() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            cs.sc.send(mapper.writeValueAsString(field));
+            cs.getSc().send(mapper.writeValueAsString(field));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +106,7 @@ public class Game {
 
     private void readFieldState() {
         disable();
-        CompletableFuture.supplyAsync(() -> cs.sc.read())
+        CompletableFuture.supplyAsync(() -> cs.getSc().read())
                 .thenAccept((res) -> {
                     ObjectMapper mapper = new ObjectMapper();
                     try {
@@ -155,7 +158,7 @@ public class Game {
             if (whitePlayer.getAvailableToClickCells().size() == 0) {
                 // Победил черный
                 // И это мы
-                if (blackPlayer.getUser() == cs.thisUser) {
+                if (blackPlayer.getUser() == cs.getThisUser()) {
                     finish(2);
                     // Чел ждет ответа
                     sendFieldState();
@@ -167,7 +170,7 @@ public class Game {
             } else if (blackPlayer.getAvailableToClickCells().size() == 0) {
                 // Победил белый
                 // И это мы
-                if (whitePlayer.getUser() == cs.thisUser) {
+                if (whitePlayer.getUser() == cs.getThisUser()) {
                     finish(1);
                     // Чел ждет ответа
                     sendFieldState();

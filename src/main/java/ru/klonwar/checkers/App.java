@@ -4,14 +4,10 @@ package ru.klonwar.checkers;
 import ru.klonwar.checkers.gui.P2PFrame;
 import ru.klonwar.checkers.models.database.APIDatabase;
 import ru.klonwar.checkers.models.database.CheckersDatabase;
-import ru.klonwar.checkers.models.database.H2Database;
-import ru.klonwar.checkers.models.database.XMLDatabase;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
-import java.io.FileInputStream;
 import java.util.Locale;
-import java.util.Properties;
 
 public class App {
     private static void setDefaultFont(String fontName, int size) {

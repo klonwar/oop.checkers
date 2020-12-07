@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.helpers.geometry;
+package ru.klonwar.checkers.util.geometry;
 
 public class Vector extends Point {
     public Vector(int x, int y) {

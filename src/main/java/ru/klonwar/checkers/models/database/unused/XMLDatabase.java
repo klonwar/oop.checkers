@@ -1,9 +1,13 @@
-package ru.klonwar.checkers.models.database;
+package ru.klonwar.checkers.models.database.unused;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ru.klonwar.checkers.models.database.CheckersDatabase;
+import ru.klonwar.checkers.models.database.GameInfo;
+import ru.klonwar.checkers.models.database.QueryResponse;
+import ru.klonwar.checkers.models.database.User;
 import ru.klonwar.checkers.models.game.Game;
 
 import javax.xml.parsers.DocumentBuilder;

@@ -1,7 +1,7 @@
 package ru.klonwar.checkers.models.game;
 
-import ru.klonwar.checkers.helpers.Pair;
-import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.util.Pair;
+import ru.klonwar.checkers.util.Position;
 import ru.klonwar.checkers.models.database.User;
 
 import java.util.ArrayList;
@@ -34,10 +34,6 @@ public class Player implements Colored {
 
     public String getLogin() {
         return user.getLogin();
-    }
-
-    public String getPassword() {
-        return user.getPassword();
     }
 
     /**

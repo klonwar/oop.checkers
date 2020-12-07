@@ -1,6 +1,7 @@
-package ru.klonwar.checkers.models.database;
+package ru.klonwar.checkers.models.database.unused;
 
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
+import ru.klonwar.checkers.models.database.*;
 import ru.klonwar.checkers.models.game.Game;
 
 import java.io.FileInputStream;

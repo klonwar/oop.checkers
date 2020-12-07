@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.gui;
+package ru.klonwar.checkers.graphics;
 
 import ru.klonwar.checkers.config.ColorEnum;
 import ru.klonwar.checkers.config.Config;

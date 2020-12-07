@@ -2,9 +2,9 @@ package ru.klonwar.checkers.graphics;
 
 import ru.klonwar.checkers.config.ColorEnum;
 import ru.klonwar.checkers.config.Config;
-import ru.klonwar.checkers.helpers.Position;
-import ru.klonwar.checkers.helpers.geometry.Point;
-import ru.klonwar.checkers.helpers.geometry.Vector;
+import ru.klonwar.checkers.util.Position;
+import ru.klonwar.checkers.util.geometry.Point;
+import ru.klonwar.checkers.util.geometry.Vector;
 import ru.klonwar.checkers.models.game.Cell;
 import ru.klonwar.checkers.models.game.Field;
 

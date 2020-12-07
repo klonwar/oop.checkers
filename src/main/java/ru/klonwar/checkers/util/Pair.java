@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.helpers;
+package ru.klonwar.checkers.util;
 
 import java.util.Objects;
 

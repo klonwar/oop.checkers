@@ -1,35 +1,25 @@
 package ru.klonwar.checkers.models.game;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import ru.klonwar.checkers.helpers.Pair;
-import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.util.Pair;
+import ru.klonwar.checkers.util.Position;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Checker implements Moveable, Colored {
+    @JsonProperty("color")
     private int color;
+
     @JsonProperty("king")
     private boolean isKing = false;
 
-    public boolean isKing() {
-        return isKing;
-    }
-
-    public void becomeKing() {
-        isKing = true;
-    }
-
+    // Нужен для корректной работы ObjectMapper-a
     public Checker() {
     }
 
     public Checker(int color) {
         this.color = color;
-    }
-
-    public int getColor() {
-        return color;
     }
 
     public boolean eatEverything(Field field, Position from, Position to) {
@@ -109,6 +99,10 @@ public class Checker implements Moveable, Colored {
         }
     }
 
+    public int getColor() {
+        return color;
+    }
+
     private void kingMoves(List<Position> possible, List<Position> required, Field field) {
         Position now = field.getPositionFromChecker(this);
         for (int i = -1; i <= 1; i += 2) {
@@ -150,6 +144,14 @@ public class Checker implements Moveable, Colored {
                 }
             }
         }
+    }
+
+    public boolean isKing() {
+        return isKing;
+    }
+
+    public void becomeKing() {
+        isKing = true;
     }
 
     public boolean canBecomeKing(Position checkerPosition) {

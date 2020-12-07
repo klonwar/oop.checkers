@@ -2,7 +2,6 @@ package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.database.GameInfo;
-import ru.klonwar.checkers.models.database.UserPair;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import javax.swing.*;
@@ -52,8 +51,8 @@ public class InfoPanel extends JPanel {
     }
 
     public void showInfoFromDB() {
-        List<GameInfo> u1GamesList = db.getGamesInfoForUserID(cs.thisUser.getId());
-        List<GameInfo> u2GamesList = db.getGamesInfoForUserID(cs.opponentUser.getId());
+        List<GameInfo> u1GamesList = db.getGamesInfoForUserID(cs.getThisUser().getId());
+        List<GameInfo> u2GamesList = db.getGamesInfoForUserID(cs.getOpponentUser().getId());
 
         user1Info.setText(u1GamesList.toString());
         user2Info.setText(u2GamesList.toString());

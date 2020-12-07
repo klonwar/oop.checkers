@@ -62,18 +62,18 @@ public class ConnectionPanel extends JPanel {
                 Socket socket = ss.accept();
                 ObjectMapper mapper = new ObjectMapper();
                 var sc = new SocketCommunicator(socket);
-                cs.sc = sc;
+                cs.setSc(sc);
                 log("Client connected");
 
                 // Получаем данные о юзере
                 String opponentData = sc.read();
-                cs.opponentUser = mapper.readValue(opponentData, User.class);
+                cs.setOpponentUser(mapper.readValue(opponentData, User.class));
 
                 // Передаем данные о себе
-                sc.send(mapper.writeValueAsString(cs.thisUser));
+                sc.send(mapper.writeValueAsString(cs.getThisUser()));
 
                 // Мы стали хостом
-                cs.thisType = ClientType.HOST;
+                cs.setThisType(ClientType.HOST);
 
                 SwingUtilities.invokeLater(switchCards);
             } catch (IOException ioException) {
@@ -90,18 +90,18 @@ public class ConnectionPanel extends JPanel {
                 Socket socket = new Socket(hostname, port);
                 var sc = new SocketCommunicator(socket);
                 ObjectMapper mapper = new ObjectMapper();
-                cs.sc = sc;
+                cs.setSc(sc);
                 log("You are connected");
 
                 // Передаем данные о себе
-                sc.send(mapper.writeValueAsString(cs.thisUser));
+                sc.send(mapper.writeValueAsString(cs.getThisUser()));
 
                 // Получаем данные о хосте
                 String opponentData = sc.read();
-                cs.opponentUser = mapper.readValue(opponentData, User.class);
+                cs.setOpponentUser(mapper.readValue(opponentData, User.class));
 
                 // Мы стали гостем
-                cs.thisType = ClientType.GUEST;
+                cs.setThisType(ClientType.GUEST);
 
                 SwingUtilities.invokeLater(switchCards);
             } catch (IOException ioException) {

@@ -3,6 +3,7 @@ package ru.klonwar.checkers.models.game;
 public class Cell {
     private Checker checker;
 
+    // Для ObjectMapper
     public Cell() {
     }
 

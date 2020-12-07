@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.helpers;
+package ru.klonwar.checkers.util;
 
 public class Position extends Pair<Integer, Integer> {
     public Position(int first, int second) {

@@ -1,6 +1,7 @@
 package ru.klonwar.checkers.gui;
 
-import ru.klonwar.checkers.helpers.geometry.Point;
+import ru.klonwar.checkers.graphics.GameGraphics;
+import ru.klonwar.checkers.util.geometry.Point;
 import ru.klonwar.checkers.models.game.Game;
 
 import javax.swing.*;

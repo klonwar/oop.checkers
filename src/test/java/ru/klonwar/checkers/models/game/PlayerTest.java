@@ -2,7 +2,7 @@ package ru.klonwar.checkers.models.game;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.klonwar.checkers.helpers.Position;
+import ru.klonwar.checkers.util.Position;
 import ru.klonwar.checkers.mocks.MockUsers;
 
 public class PlayerTest {

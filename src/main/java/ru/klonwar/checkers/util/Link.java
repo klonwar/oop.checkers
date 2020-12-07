@@ -1,4 +1,4 @@
-package ru.klonwar.checkers.helpers;
+package ru.klonwar.checkers.util;
 
 public class Link<T> {
     public T item = null;

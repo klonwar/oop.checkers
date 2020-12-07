@@ -16,7 +16,7 @@ public class Fetch {
     }
 
     public String fetch() {
-        HttpURLConnection con = null;
+        HttpURLConnection con;
         try {
             URL url = new URL(link);
             con = (HttpURLConnection) url.openConnection();
