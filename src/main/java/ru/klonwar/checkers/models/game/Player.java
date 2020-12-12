@@ -7,16 +7,16 @@ import ru.klonwar.checkers.models.database.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player implements Colored {
-    private final Field field;
-    private final int color;
+public class Player {
+    private Field field;
+    private final PlayerColor color;
     private final User user;
 
     private List<Pair<Position, Position>> availableMoves = new ArrayList<>();
     private List<Cell> availableToClickCells = new ArrayList<>();
     private Cell activeCell = null;
 
-    public Player(User user, Field field, int color) {
+    public Player(User user, Field field, PlayerColor color) {
         this.user = user;
         this.color = color;
         this.field = field;
@@ -24,16 +24,9 @@ public class Player implements Colored {
         suggestPossibleMoves();
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public int getId() {
-        return user.getId();
-    }
-
-    public String getLogin() {
-        return user.getLogin();
+    public Player(User user, PlayerColor color) {
+        this.user = user;
+        this.color = color;
     }
 
     /**
@@ -119,8 +112,28 @@ public class Player implements Colored {
         }
     }
 
-    @Override
-    public int getColor() {
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public int getId() {
+        return user.getId();
+    }
+
+    public String getLogin() {
+        return user.getLogin();
+    }
+
+    public PlayerColor getColor() {
         return color;
     }
 

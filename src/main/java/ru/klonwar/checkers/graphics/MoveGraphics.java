@@ -21,7 +21,6 @@ public class MoveGraphics {
         int r = Config.FONT_SIZE;
         activePlayerChecker.paint(g2d, new Point(point.getX() + r, point.getY() + 5 * r / 2), r*2, false, false, false);
 
-        g2d.drawString("Ctrl + R - Заново", point.getX(), point.getY() + 8*Config.FONT_SIZE);
         g2d.drawString("Esc - Сбросить выделение", point.getX(), point.getY() + 9*Config.FONT_SIZE);
         g2d.drawString("F1 - Страница статистики", point.getX(), point.getY() + 10*Config.FONT_SIZE);
 

@@ -1,8 +1,10 @@
 package ru.klonwar.checkers.gui;
 
+import ru.klonwar.checkers.models.game.server.GuestServer;
+import ru.klonwar.checkers.models.game.server.HostServer;
+import ru.klonwar.checkers.models.game.server.SocketServer;
 import ru.klonwar.checkers.util.Link;
 import ru.klonwar.checkers.models.database.CheckersDatabase;
-import ru.klonwar.checkers.models.game.Game;
 import ru.klonwar.checkers.models.p2p.ClientType;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
 
@@ -36,7 +38,15 @@ public class P2PFrame extends JFrame {
 
         ip = new InfoPanel(connectionState, db, () -> {
             if (gpLink.item != null && connectionState.getOpponentUser() != null) {
-                gpLink.item.setGame(new Game(connectionState, db));
+                if (connectionState.getThisType() == ClientType.HOST) {
+                    HostServer hs = new HostServer(connectionState, db);
+                    hs.connect();
+                    gpLink.item.setGameServer(hs);
+                } else {
+                    GuestServer gs = new GuestServer(connectionState, db);
+                    gs.connect();
+                    gpLink.item.setGameServer(gs);
+                }
                 cl.next(body);
             }
         });
@@ -54,7 +64,7 @@ public class P2PFrame extends JFrame {
             }
         });
 
-        gpLink.item = new GamePanel( () -> {
+        gpLink.item = new GamePanel(() -> {
             ip.showInfoFromDB();
             cl.next(body);
         });

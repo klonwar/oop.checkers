@@ -1,5 +1,6 @@
 package ru.klonwar.checkers.models.p2p;
 
+import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.database.User;
 
 public class ConnectionState {
@@ -7,7 +8,8 @@ public class ConnectionState {
     private User opponentUser;
     private SocketCommunicator sc;
     private ClientType thisType;
-    private boolean activeUser = false;
+    private boolean isActive = false;
+    private CheckersDatabase db;
 
     public ConnectionState() {
     }
@@ -15,6 +17,14 @@ public class ConnectionState {
     public ConnectionState(User thisUser, User opponentUser) {
         this.setThisUser(thisUser);
         this.setOpponentUser(opponentUser);
+    }
+
+    public CheckersDatabase getDb() {
+        return db;
+    }
+
+    public void setDb(CheckersDatabase db) {
+        this.db = db;
     }
 
     public User getThisUser() {
@@ -49,11 +59,11 @@ public class ConnectionState {
         this.thisType = thisType;
     }
 
-    public boolean isActiveUser() {
-        return activeUser;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setActiveUser(boolean activeUser) {
-        this.activeUser = activeUser;
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 }

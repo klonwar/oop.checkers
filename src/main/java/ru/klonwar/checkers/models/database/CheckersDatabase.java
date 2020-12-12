@@ -1,15 +1,15 @@
 package ru.klonwar.checkers.models.database;
 
-import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.game.GameMechanics;
 
 import java.util.List;
 
 public interface CheckersDatabase {
     QueryResponse addUser(User user);
 
-    QueryResponse addGame(Game game);
+    QueryResponse addGame(GameMechanics gameMechanics);
 
-    List<GameInfo> getGamesInfoForUserID(int userID);
+    List<GamerInfo> getTopUsers();
 
     User getUserByLoginAndPassword(String login, String password);
 }

@@ -3,12 +3,9 @@ package ru.klonwar.checkers.models.database;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.klonwar.checkers.models.api.Fetch;
-import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.game.GameMechanics;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -44,13 +41,13 @@ public class APIDatabase implements CheckersDatabase {
     }
 
     @Override
-    public QueryResponse addGame(Game game) {
+    public QueryResponse addGame(GameMechanics gameMechanics) {
         try {
             Fetch fetch = new Fetch(apiLink +
                     "/new-game/" +
-                    game.getWhitePlayer().getId() + "/" +
-                    game.getBlackPlayer().getId() + "/" +
-                    game.getWinner() + "/");
+                    gameMechanics.getWhitePlayer().getId() + "/" +
+                    gameMechanics.getBlackPlayer().getId() + "/" +
+                    (gameMechanics.getWinner().ordinal() + 1) + "/");
             String response = fetch.fetch();
             if (response.charAt(0) == '{' && response.charAt(1) == '}') {
                 return new QueryResponse(false, "Неверные параметры");
@@ -62,16 +59,15 @@ public class APIDatabase implements CheckersDatabase {
     }
 
     @Override
-    public List<GameInfo> getGamesInfoForUserID(int userID) {
+    public List<GamerInfo> getTopUsers() {
         try {
-            Fetch fetch = new Fetch(apiLink + "/search-game/" + userID);
+            Fetch fetch = new Fetch(apiLink + "/gamers-list/");
             String response = fetch.fetch();
 
             ObjectMapper mapper = new ObjectMapper();
-            List<GameInfo> games = mapper.readValue(response, new TypeReference<List<GameInfo>>() {
-            });
 
-            return games;
+            return mapper.readValue(response, new TypeReference<>() {
+            });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

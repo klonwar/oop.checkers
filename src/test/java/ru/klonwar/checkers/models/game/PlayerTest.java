@@ -9,8 +9,8 @@ public class PlayerTest {
     @Test
     public void playerMoveCheckerCorrectly() {
         Field field = new Field();
-        Player player0 = new Player(MockUsers.USER_1, field, 0);
-        Player player1 = new Player(MockUsers.USER_2, field, 1);
+        Player player0 = new Player(MockUsers.USER_1, field, PlayerColor.BLACK);
+        Player player1 = new Player(MockUsers.USER_2, field, PlayerColor.WHITE);
 
         Checker checker0;
         Checker checker1;

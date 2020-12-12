@@ -1,17 +1,20 @@
 package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.models.database.CheckersDatabase;
-import ru.klonwar.checkers.models.database.GameInfo;
+import ru.klonwar.checkers.models.database.GamerInfo;
+import ru.klonwar.checkers.models.database.User;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class InfoPanel extends JPanel {
     JButton startGameButton = new JButton("Новая игра");
-    JTextArea user1Info = new JTextArea();
-    JTextArea user2Info = new JTextArea();
+    JPanel u1Panel;
+    JPanel u2Panel;
     private final CheckersDatabase db;
     private final ConnectionState cs;
 
@@ -21,18 +24,14 @@ public class InfoPanel extends JPanel {
         setLayout(new GridLayout(0, 3, 10, 10));
 
         // User 1 info
-        JPanel u1Panel = new JPanel();
-        u1Panel.setLayout(new CardLayout());
+        u1Panel = new JPanel();
+        u1Panel.setLayout(new GridLayout(8, 0, 10, 10));
 
-        user1Info.setLineWrap(true);
-        u1Panel.add(user1Info);
+        // Top list
+        u2Panel = new JPanel();
+        u2Panel.setLayout(new GridLayout(8, 0, 10, 10));
 
-        // User 2 info
-        JPanel u2Panel = new JPanel();
-        u2Panel.setLayout(new CardLayout());
-
-        user2Info.setLineWrap(true);
-        u2Panel.add(user2Info);
+        u2Panel.add(new JLabel("Топ игроков"));
 
         // Консоль
         JPanel consolePanel = new JPanel(new BorderLayout());
@@ -51,10 +50,16 @@ public class InfoPanel extends JPanel {
     }
 
     public void showInfoFromDB() {
-        List<GameInfo> u1GamesList = db.getGamesInfoForUserID(cs.getThisUser().getId());
-        List<GameInfo> u2GamesList = db.getGamesInfoForUserID(cs.getOpponentUser().getId());
+        List<GamerInfo> topUsersList = db.getTopUsers();
 
-        user1Info.setText(u1GamesList.toString());
-        user2Info.setText(u2GamesList.toString());
+        u2Panel.removeAll();
+        u2Panel.add(new JLabel("Топ игроков"));
+
+        for (int i = 1; i <= 7 && i < topUsersList.size(); i++) {
+            GamerInfo item = topUsersList.get(i - 1);
+            u2Panel.add(new JLabel("\"" + item.getLogin() + "\". Побед: " + item.getWins()), i);
+        }
+
+
     }
 }

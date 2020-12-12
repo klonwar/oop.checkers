@@ -2,11 +2,13 @@ package ru.klonwar.checkers.graphics;
 
 import ru.klonwar.checkers.config.ColorEnum;
 import ru.klonwar.checkers.config.Config;
+import ru.klonwar.checkers.models.game.server.SocketServer;
+import ru.klonwar.checkers.models.p2p.GameServer;
 import ru.klonwar.checkers.util.Pair;
 import ru.klonwar.checkers.util.Position;
 import ru.klonwar.checkers.util.geometry.Point;
 import ru.klonwar.checkers.models.game.Cell;
-import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.game.GameMechanics;
 import ru.klonwar.checkers.models.game.Player;
 
 import javax.swing.*;
@@ -14,7 +16,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class GameGraphics {
-    private Game game = null;
+    private SocketServer gameServer = null;
     private FieldGraphics fieldGraphics = null;
     private final MoveGraphics moveGraphics = new MoveGraphics();
     private final WaitingGraphics waitingGraphics = new WaitingGraphics();
@@ -24,30 +26,28 @@ public class GameGraphics {
         this.repaint = repaint;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
-        fieldGraphics = new FieldGraphics(game.getField());
+    public GameServer getGameServer() {
+        return gameServer;
     }
 
-    public Game getGame() {
-        return game;
+    public void setGameServer(SocketServer gameServer) {
+        this.gameServer = gameServer;
+        fieldGraphics = new FieldGraphics(gameServer.getField());
     }
 
-    public void restart() {
-        // todo
-        // game = new Game();
-        // fieldGraphics = new FieldGraphics(game.getField());
+    public GameMechanics getGameMechanics() {
+        return gameServer.getMechanics();
     }
 
     public void onClick(Point point) {
-        if (game != null) {
-            Player player = game.getActivePlayer();
+        if (gameServer != null) {
+            Player player = gameServer.getActivePlayer();
 
             Cell activeCell = player.getActiveCell();
-            Position activePosition = game.getField().getPositionFromCell(activeCell);
+            Position activePosition = gameServer.getField().getPositionFromCell(activeCell);
 
             Position clickedPosition = fieldGraphics.getClickedPosition(point);
-            Cell clickedCell = game.getField().getCellFromPosition(clickedPosition);
+            Cell clickedCell = gameServer.getField().getCellFromPosition(clickedPosition);
 
             if (clickedPosition == null || clickedCell == null) return;
 
@@ -62,12 +62,11 @@ public class GameGraphics {
                 if (endOfTurn) {
                     SwingUtilities.invokeLater(repaint);
 
-                    game.checkWinner();
                     // Меняем игрока
-                    if (!game.haveWinner())
-                        game.switchPlayer();
+                    if (!gameServer.haveWinner())
+                        gameServer.nextTurn();
                     else
-                        game.enable();
+                        gameServer.enable();
 
                     player.clearActiveCell();
                 } else {
@@ -91,35 +90,35 @@ public class GameGraphics {
     }
 
     public void clearHints() {
-        game.getActivePlayer().clearActiveCell();
+        gameServer.getActivePlayer().clearActiveCell();
     }
 
     public void paint(Graphics2D g2d, int w, int h) {
         int size = Math.min(w, h);
-        if (game != null) {
-            Player player = game.getActivePlayer();
-            Position activePosition = game.getField().getPositionFromCell(player.getActiveCell());
+        if (gameServer != null) {
+            Player player = gameServer.getActivePlayer();
+            Position activePosition = gameServer.getField().getPositionFromCell(player.getActiveCell());
 
             ArrayList<Cell> availableToGoTo = new ArrayList<>();
             if (activePosition != null) {
                 for (Pair<Position, Position> item : player.getAvailableMoves()) {
                     if (item.getFirst().equals(activePosition)) {
-                        availableToGoTo.add(game.getField().getCellFromPosition(item.getSecond()));
+                        availableToGoTo.add(gameServer.getField().getCellFromPosition(item.getSecond()));
                     }
                 }
             }
 
-            if (!game.haveWinner()) {
+            if (!gameServer.haveWinner()) {
                 fieldGraphics.paint(g2d, size, player.getActiveCell(), availableToGoTo, player.getAvailableToClickCells());
             }
-            moveGraphics.paint(g2d, player, new Point(size, 0), game.haveWinner());
+            moveGraphics.paint(g2d, player, new Point(size, 0), gameServer.haveWinner());
         } else {
             g2d.setColor(ColorEnum.BLACK.getColor());
             g2d.setFont(Config.FONT);
             g2d.drawString("Игра не начата", 0, Config.FONT_SIZE);
         }
 
-        if (!game.isEnabled())
+        if (!gameServer.isEnabled())
             waitingGraphics.paint(g2d, w, h);
     }
 

@@ -34,8 +34,8 @@ public class CheckerTest {
         Field field = new Field();
 
         setEmptyState(field);
-        field.getFieldState()[4][4] = new Cell(new Checker(1));
-        field.getFieldState()[3][3] = new Cell(new Checker(0));
+        field.getFieldState()[4][4] = new Cell(new Checker(PlayerColor.WHITE));
+        field.getFieldState()[3][3] = new Cell(new Checker(PlayerColor.BLACK));
 
         Assert.assertEquals(1, getMovesFromCheckerPosition(field, new Position(4, 4)).size());
         Assert.assertEquals(1, getMovesFromCheckerPosition(field, new Position(4, 4)).size());
@@ -49,8 +49,8 @@ public class CheckerTest {
         Field field = new Field();
 
         setEmptyState(field);
-        field.getFieldState()[4][4] = new Cell(new Checker(1));
-        Checker king = new Checker(0);
+        field.getFieldState()[4][4] = new Cell(new Checker(PlayerColor.WHITE));
+        Checker king = new Checker(PlayerColor.BLACK);
         king.becomeKing();
         field.getFieldState()[0][0] = new Cell(king);
 

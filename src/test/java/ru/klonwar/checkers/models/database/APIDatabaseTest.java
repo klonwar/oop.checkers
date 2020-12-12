@@ -4,8 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.klonwar.checkers.mocks.MockUsers;
-import ru.klonwar.checkers.models.game.Game;
+import ru.klonwar.checkers.models.game.GameMechanics;
+import ru.klonwar.checkers.models.game.Player;
+import ru.klonwar.checkers.models.game.PlayerColor;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
+import ru.klonwar.checkers.models.p2p.GameServer;
 
 import java.io.FileInputStream;
 import java.util.List;
@@ -33,13 +36,17 @@ public class APIDatabaseTest {
         boolean isCorrect = res.getMessage().equals("Успешно") || res.getMessage().equals("Такой пользователь уже зарегистрирован");
         Assert.assertTrue(isCorrect);
     }
+
     @Test
     public void addingGameWorksCorrectly() {
-        Game game = new Game(new ConnectionState(MockUsers.USER_1, MockUsers.USER_2), testDb);
-        QueryResponse qr = game.finish(1);
+        QueryResponse qr = testDb.addGame(new GameMechanics(
+                new Player(MockUsers.USER_1, PlayerColor.WHITE),
+                new Player(MockUsers.USER_2, PlayerColor.BLACK)
+        ));
         System.out.println(qr.getMessage());
         Assert.assertTrue(qr.isSuccessful());
     }
+
     @Test
     public void gettingUserWorksCorrectly() {
         User user = testDb.getUserByLoginAndPassword(MockUsers.USER_2.getLogin(), MockUsers.USER_2.getPassword());
@@ -47,9 +54,10 @@ public class APIDatabaseTest {
     }
 
     @Test
-    public void gettingGamesWorksCorrectly() {
-        List<GameInfo> user = testDb.getGamesInfoForUserID(MockUsers.USER_2.getId());
-        Assert.assertNotNull(user);
+    public void gettingTopUsersWorksCorrectly() {
+        List<GamerInfo> users = testDb.getTopUsers();
+        Assert.assertNotNull(users);
+        Assert.assertNotEquals(users.size(), 0);
     }
 
 }

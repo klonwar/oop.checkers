@@ -17,12 +17,25 @@ public class Field {
         for (int i = 0; i < fieldState.length; i++) {
             for (int j = 0; j < fieldState[i].length; j++) {
                 fieldState[i][j] = new Cell(null);
+                // TODO REMOVE
+                if (i == 0 && j == 1) {
+                    Checker c = new Checker(PlayerColor.BLACK);
+                    c.becomeKing();
+                    fieldState[i][j].setChecker(c);
+                } else if (i == fieldState.length - 2 && j == fieldState.length - 1) {
+                    Checker c = new Checker(PlayerColor.WHITE);
+                    c.becomeKing();
+                    fieldState[i][j].setChecker(c);
+                }
+
+/*
                 if (((j == 0 || j == 2) && i % 2 == 1) || (j == 1 && i % 2 == 0)) {
-                    fieldState[i][j].setChecker(new Checker(0));
+                    fieldState[i][j].setChecker(new Checker(PlayerColor.BLACK));
                 }
                 if (((j == fieldState.length - 1 || j == fieldState.length - 3) && i % 2 == 0) || (j == fieldState.length - 2 && i % 2 == 1)) {
-                    fieldState[i][j].setChecker(new Checker(1));
+                    fieldState[i][j].setChecker(new Checker(PlayerColor.WHITE));
                 }
+*/
             }
         }
     }
@@ -99,11 +112,11 @@ public class Field {
         }
         return "Field{\n" +
                 res
-                +"}";
+                + "}";
     }
 
     public void copyFrom(Field field) {
-        for (int i=0; i<Field.height; i++) {
+        for (int i = 0; i < Field.height; i++) {
             for (int j = 0; j < Field.height; j++) {
                 fieldState[i][j].setChecker(field.fieldState[i][j].getChecker());
             }

@@ -7,9 +7,9 @@ import ru.klonwar.checkers.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Checker implements Moveable, Colored {
+public class Checker {
     @JsonProperty("color")
-    private int color;
+    private PlayerColor color;
 
     @JsonProperty("king")
     private boolean isKing = false;
@@ -18,7 +18,7 @@ public class Checker implements Moveable, Colored {
     public Checker() {
     }
 
-    public Checker(int color) {
+    public Checker(PlayerColor color) {
         this.color = color;
     }
 
@@ -80,7 +80,7 @@ public class Checker implements Moveable, Colored {
                 if (targetCell == null) continue;
 
                 Checker targetChecker = targetCell.getChecker();
-                if (targetChecker == null && (color == 0 && j > 0 || color == 1 && j < 0)) {
+                if (targetChecker == null && (color == PlayerColor.BLACK && j > 0 || color == PlayerColor.WHITE && j < 0)) {
                     // Ячейка свободна, и шашка текущего цвета может идти в ее направлении
                     possible.add(target);
                 } else if (targetChecker != null && color != targetChecker.getColor()) {
@@ -99,7 +99,7 @@ public class Checker implements Moveable, Colored {
         }
     }
 
-    public int getColor() {
+    public PlayerColor getColor() {
         return color;
     }
 
@@ -157,11 +157,11 @@ public class Checker implements Moveable, Colored {
     public boolean canBecomeKing(Position checkerPosition) {
         if (isKing())
             return false;
-        return (color == 1) ? checkerPosition.getSecond() == 0 : checkerPosition.getSecond() == 7;
+        return (color == PlayerColor.WHITE) ? checkerPosition.getSecond() == 0 : checkerPosition.getSecond() == 7;
     }
 
     @Override
     public String toString() {
-        return (color == 0) ? "o" : "@";
+        return (color == PlayerColor.WHITE) ? "o" : "@";
     }
 }

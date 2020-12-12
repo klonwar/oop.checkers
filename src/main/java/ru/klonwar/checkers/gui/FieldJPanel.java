@@ -1,8 +1,10 @@
 package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.graphics.GameGraphics;
+import ru.klonwar.checkers.models.game.GameMechanics;
+import ru.klonwar.checkers.models.game.server.SocketServer;
+import ru.klonwar.checkers.models.p2p.GameServer;
 import ru.klonwar.checkers.util.geometry.Point;
-import ru.klonwar.checkers.models.game.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +19,7 @@ public class FieldJPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (gameGraphics.getGame().isEnabled())
+                if (gameGraphics.getGameServer().isEnabled())
                     gameGraphics.onClick(new Point(e.getX(), e.getY()));
                 repaint();
             }
@@ -35,9 +37,6 @@ public class FieldJPanel extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     gameGraphics.clearHints();
                     repaint();
-                } else if (e.getKeyCode() == KeyEvent.VK_R && e.isControlDown()) {
-                    restart();
-                    repaint();
                 } else if (e.getKeyCode() == KeyEvent.VK_F1) {
                     SwingUtilities.invokeLater(switchCards);
                 }
@@ -51,8 +50,8 @@ public class FieldJPanel extends JPanel {
         repTimer.start();
     }
 
-    public void setGame(Game game) {
-        gameGraphics.setGame(game);
+    public void setGameServer(SocketServer gameServer) {
+        gameGraphics.setGameServer(gameServer);
     }
 
     @Override
@@ -64,10 +63,5 @@ public class FieldJPanel extends JPanel {
         g2d.setRenderingHints(rh);
 
         gameGraphics.paint(g2d, getWidth(), getHeight());
-    }
-
-    public void restart() {
-        gameGraphics.restart();
-        repaint();
     }
 }

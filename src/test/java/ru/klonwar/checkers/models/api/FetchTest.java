@@ -3,7 +3,6 @@ package ru.klonwar.checkers.models.api;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import ru.klonwar.checkers.models.database.APIDatabase;
 
 import java.io.FileInputStream;
 import java.util.Properties;
