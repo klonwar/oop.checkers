@@ -7,8 +7,7 @@ import ru.klonwar.checkers.mocks.MockUsers;
 import ru.klonwar.checkers.models.game.GameMechanics;
 import ru.klonwar.checkers.models.game.Player;
 import ru.klonwar.checkers.models.game.PlayerColor;
-import ru.klonwar.checkers.models.p2p.ConnectionState;
-import ru.klonwar.checkers.models.p2p.GameServer;
+import ru.klonwar.checkers.models.p2p.GameWithDatabase;
 
 import java.io.FileInputStream;
 import java.util.List;
@@ -39,10 +38,13 @@ public class APIDatabaseTest {
 
     @Test
     public void addingGameWorksCorrectly() {
-        QueryResponse qr = testDb.addGame(new GameMechanics(
+        GameMechanics gm = new GameMechanics(
                 new Player(MockUsers.USER_1, PlayerColor.WHITE),
                 new Player(MockUsers.USER_2, PlayerColor.BLACK)
-        ));
+        );
+        gm.finish(PlayerColor.WHITE);
+
+        QueryResponse qr = testDb.addGame(gm);
         System.out.println(qr.getMessage());
         Assert.assertTrue(qr.isSuccessful());
     }

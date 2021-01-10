@@ -68,9 +68,6 @@ public class CheckerTest {
         moves = getMovesFromCheckerPosition(field, new Position(0, 0));
         Assert.assertNull(moves);
 
-        moves = getMovesFromCheckerPosition(field, new Position(0, 1));
-        Assert.assertEquals(new ArrayList<>(), moves);
-
         moves = getMovesFromCheckerPosition(field, new Position(0, 5));
         Assert.assertNotNull(moves);
         Assert.assertEquals(1, moves.size());

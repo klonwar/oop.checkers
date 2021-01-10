@@ -5,7 +5,6 @@ import ru.klonwar.checkers.models.game.GameMechanics;
 import ru.klonwar.checkers.models.game.Player;
 import ru.klonwar.checkers.models.game.PlayerColor;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
-import ru.klonwar.checkers.models.p2p.GameServer;
 
 public class GuestServer extends SocketServer {
 

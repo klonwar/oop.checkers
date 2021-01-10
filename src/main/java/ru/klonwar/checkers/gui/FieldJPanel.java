@@ -1,9 +1,7 @@
 package ru.klonwar.checkers.gui;
 
 import ru.klonwar.checkers.graphics.GameGraphics;
-import ru.klonwar.checkers.models.game.GameMechanics;
 import ru.klonwar.checkers.models.game.server.SocketServer;
-import ru.klonwar.checkers.models.p2p.GameServer;
 import ru.klonwar.checkers.util.geometry.Point;
 
 import javax.swing.*;

@@ -3,7 +3,7 @@ package ru.klonwar.checkers.graphics;
 import ru.klonwar.checkers.config.ColorEnum;
 import ru.klonwar.checkers.config.Config;
 import ru.klonwar.checkers.models.game.server.SocketServer;
-import ru.klonwar.checkers.models.p2p.GameServer;
+import ru.klonwar.checkers.models.p2p.GameWithDatabase;
 import ru.klonwar.checkers.util.Pair;
 import ru.klonwar.checkers.util.Position;
 import ru.klonwar.checkers.util.geometry.Point;
@@ -26,7 +26,7 @@ public class GameGraphics {
         this.repaint = repaint;
     }
 
-    public GameServer getGameServer() {
+    public GameWithDatabase getGameServer() {
         return gameServer;
     }
 

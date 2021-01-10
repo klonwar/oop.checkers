@@ -6,10 +6,11 @@ import ru.klonwar.checkers.models.database.CheckersDatabase;
 import ru.klonwar.checkers.models.game.Field;
 import ru.klonwar.checkers.models.game.PlayerColor;
 import ru.klonwar.checkers.models.p2p.ConnectionState;
-import ru.klonwar.checkers.models.p2p.GameServer;
+import ru.klonwar.checkers.models.p2p.GameWithDatabase;
+
 import java.util.concurrent.CompletableFuture;
 
-public class SocketServer extends GameServer implements SocketGame {
+public class SocketServer extends GameWithDatabase implements SocketGame {
     protected ConnectionState cs;
 
     public SocketServer(ConnectionState cs, CheckersDatabase db) {
@@ -40,11 +41,13 @@ public class SocketServer extends GameServer implements SocketGame {
 
     @Override
     protected void ifWinnerFound() {
-        if (gm.getWinner() == gm.getCurrentPlayerColor()) {
-            sendFieldState();
-            super.ifWinnerFound();
-        } else {
-            gm.changeShownIndex();
+        if (gm.haveWinner()) {
+            if (gm.getWinner() == gm.getCurrentPlayerColor()) {
+                sendFieldState();
+                super.ifWinnerFound();
+            } else {
+                gm.changeShownIndex();
+            }
         }
     }
 
@@ -75,6 +78,7 @@ public class SocketServer extends GameServer implements SocketGame {
                         }
 
                         enable();
+
                     } catch (Exception err) {
                         throw new RuntimeException(err);
                     }

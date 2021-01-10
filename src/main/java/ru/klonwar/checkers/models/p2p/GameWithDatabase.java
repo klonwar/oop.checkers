@@ -10,12 +10,12 @@ import ru.klonwar.checkers.models.game.PlayerColor;
 import java.util.Collections;
 import java.util.Map;
 
-public class GameServer {
+public class GameWithDatabase {
     protected GameMechanics gm;
     protected boolean isEnabled;
     protected CheckersDatabase db;
 
-    public GameServer(CheckersDatabase db) {
+    public GameWithDatabase(CheckersDatabase db) {
         this.db = db;
     }
 
